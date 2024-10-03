@@ -11,7 +11,7 @@ The idea is to build a simple ERP, managerial only, that can do some basic opera
 
 I want to be able to experiment with some techniches and tecnologies:
 - Modular Monolith at first
-- Microsservice experience after
+- Microsservice experiement after
 - Intermodule communication using events through messaging (RabittMQ)
 - Caching with Redis
 - Logging and telemetry with Serilog and OpenTelemetry
