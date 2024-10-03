@@ -1,0 +1,6 @@
+﻿services:
+  micro.api:
+    image: micro.api
+    build:
+      context: .
+      dockerfile: Presentation/Micro.Api/Dockerfile
