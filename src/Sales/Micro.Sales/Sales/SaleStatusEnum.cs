@@ -1,6 +1,6 @@
 namespace Micro.Sales.Sales;
 
-public enum SaleStatusEnum
+internal enum SaleStatusEnum
 {
     Created = 0,
     Finalized = 1,

@@ -1,4 +1,4 @@
-namespace Micro.Sales.Sales;
+namespace Micro.Core.Common.ValueObjects;
 
 public readonly record struct PriceInfo(
     decimal Quantity,

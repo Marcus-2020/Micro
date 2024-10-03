@@ -1,8 +1,9 @@
 using Micro.Core.Common.Entities;
+using Micro.Core.Common.ValueObjects;
 
 namespace Micro.Sales.Sales;
 
-public class Sale : BaseEntity
+internal class Sale : BaseEntity
 {
     public Sale(int saleNumber, DateTime saleDate, SaleStatusEnum status, PriceInfo priceInfo, List<SaleItem>? items = null)
         : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)

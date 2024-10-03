@@ -1,11 +1,11 @@
 using Micro.Core.Common.Entities;
 using Micro.Core.Common.ValueObjects;
 
-namespace Micro.Sales.Sales;
+namespace Micro.Purchases.Purchases;
 
-internal class SaleItem : BaseEntity
+internal class PurchaseItem : BaseEntity
 {
-    public SaleItem(Guid productId, string description, PriceInfo priceInfo) 
+    public PurchaseItem(Guid productId, string description, PriceInfo priceInfo) 
         : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
     {
         ProductId = productId;
@@ -13,7 +13,7 @@ internal class SaleItem : BaseEntity
         PriceInfo = priceInfo;
     }
     
-    public SaleItem(Guid id, Guid productId, string description, PriceInfo priceInfo,
+    public PurchaseItem(Guid id, Guid productId, string description, PriceInfo priceInfo,
         DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
     {
         ProductId = productId;
