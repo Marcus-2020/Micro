@@ -2,24 +2,26 @@ using Micro.Core.Common.Entities;
 
 namespace Micro.Sales.Sales;
 
-internal class Customer : BaseEntity
+internal class Customer : SoftDeletableEntity
 {
-    public Customer(string name, string email, string document, CustomerAddress address) 
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
+    public Customer(string name, string email, string document, CustomerAddress address, bool active) 
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
     {
         Name = name;
         Email = email;
         Document = document;
         Address = address;
+        Active = active;
     }
     
-    public Customer(Guid id, string name, string email, string document, CustomerAddress address,
-        DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
+    public Customer(Guid id, string name, string email, string document, CustomerAddress address, bool active,
+        DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt, isDeleted)
     {
         Name = name;
         Email = email;
         Document = document;
         Address = address;
+        Active = active;
     }
 
     private string _name;
@@ -46,4 +48,6 @@ internal class Customer : BaseEntity
     }
 
     public CustomerAddress Address { get; private set; }
+    
+    public bool Active { get; private set; }
 }

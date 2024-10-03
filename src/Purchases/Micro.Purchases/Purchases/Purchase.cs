@@ -3,10 +3,10 @@ using Micro.Core.Common.ValueObjects;
 
 namespace Micro.Purchases.Purchases;
 
-internal class Purchase : BaseEntity
+internal class Purchase : SoftDeletableEntity
 {
     public Purchase(int saleNumber, DateTime saleDate, PurchaseStatusEnum status, PriceInfo priceInfo, 
-        List<PurchaseItem>? items = null) : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
+        List<PurchaseItem>? items = null) : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
     {
         PurchaseNumber = saleNumber;
         PurchaseDate = saleDate;
@@ -16,7 +16,7 @@ internal class Purchase : BaseEntity
     }
     
     public Purchase(Guid id, int saleNumber, DateTime saleDate, PurchaseStatusEnum status, PriceInfo priceInfo, 
-        List<PurchaseItem> items, DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
+        List<PurchaseItem> items, DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt, isDeleted)
     {
         PurchaseNumber = saleNumber;
         PurchaseDate = saleDate;

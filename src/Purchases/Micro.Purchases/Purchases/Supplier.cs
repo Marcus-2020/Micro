@@ -2,10 +2,10 @@ using Micro.Core.Common.Entities;
 
 namespace Micro.Purchases.Purchases;
 
-internal class Supplier : BaseEntity
+internal class Supplier : SoftDeletableEntity
 {
     public Supplier(string name, string email, string document, SupplierAddress address) 
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
     {
         Name = name;
         Email = email;
@@ -14,7 +14,7 @@ internal class Supplier : BaseEntity
     }
     
     public Supplier(Guid id, string name, string email, string document, SupplierAddress address,
-        DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
+        DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt, isDeleted)
     {
         Name = name;
         Email = email;
@@ -46,4 +46,6 @@ internal class Supplier : BaseEntity
     }
 
     public SupplierAddress Address { get; private set; }
+
+    public bool Active { get; private set; }
 }

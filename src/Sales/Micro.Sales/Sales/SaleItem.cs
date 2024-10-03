@@ -3,10 +3,10 @@ using Micro.Core.Common.ValueObjects;
 
 namespace Micro.Sales.Sales;
 
-internal class SaleItem : BaseEntity
+internal class SaleItem : SoftDeletableEntity
 {
     public SaleItem(Guid productId, string description, PriceInfo priceInfo) 
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
     {
         ProductId = productId;
         Description = description;
@@ -14,7 +14,7 @@ internal class SaleItem : BaseEntity
     }
     
     public SaleItem(Guid id, Guid productId, string description, PriceInfo priceInfo,
-        DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
+        DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt, isDeleted)
     {
         ProductId = productId;
         Description = description;

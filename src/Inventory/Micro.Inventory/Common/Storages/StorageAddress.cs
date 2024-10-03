@@ -1,8 +1,8 @@
-namespace Micro.Purchases.Purchases;
+namespace Micro.Inventory.Common.Storages;
 
-internal record struct SupplierAddress(
+internal record struct StorageAddress(
     Guid Id,
-    Guid CustomerId,
+    Guid StorageId,
     string Street,
     string City,
     string State,

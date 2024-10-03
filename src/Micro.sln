@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Micro.Core", "Core\Micro.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Micro.Purchases", "Purchases\Micro.Purchases\Micro.Purchases.csproj", "{06593815-9F9B-4CA8-BC0D-CEAF2A8761A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Micro.Inventory", "Inventory\Micro.Inventory\Micro.Inventory.csproj", "{4C344212-619F-4F4D-A011-0827C541EDEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,7 @@ Global
 		{BCBBB4E1-72E3-46C4-83C7-B89464583B52} = {57BB62D5-9000-4292-80C1-F767B82B826B}
 		{E15F1790-B73E-4920-AD91-DEB8FEDBA1C3} = {DA613D38-8325-4F04-8F7C-E40BE472D7E9}
 		{06593815-9F9B-4CA8-BC0D-CEAF2A8761A2} = {B73985C7-5D59-4E8C-BC69-1F1BB054B470}
+		{4C344212-619F-4F4D-A011-0827C541EDEE} = {24DC13F1-8360-4D40-80DF-F33306DD435E}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{BCBBB4E1-72E3-46C4-83C7-B89464583B52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -45,5 +48,9 @@ Global
 		{06593815-9F9B-4CA8-BC0D-CEAF2A8761A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06593815-9F9B-4CA8-BC0D-CEAF2A8761A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06593815-9F9B-4CA8-BC0D-CEAF2A8761A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C344212-619F-4F4D-A011-0827C541EDEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C344212-619F-4F4D-A011-0827C541EDEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C344212-619F-4F4D-A011-0827C541EDEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C344212-619F-4F4D-A011-0827C541EDEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
