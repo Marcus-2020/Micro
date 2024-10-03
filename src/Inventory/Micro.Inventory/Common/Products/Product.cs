@@ -1,16 +1,36 @@
 using Micro.Core.Common.Entities;
+using Micro.Core.Common.ValueObjects;
 
 namespace Micro.Inventory.Common.Products;
 
 internal class Product : BaseEntity
 {
-    public Product()
+    public Product(string sku, string name, string description, ProductTypeEnum productType, 
+        ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool active)
         : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
     {
+        Sku = sku;
+        Name = name;
+        Description = description;
+        ProductType = productType;
+        Category = category;
+        Unit = unit;
+        PriceInfo = priceInfo;
+        Active = active;
     }
     
-    public Product(Guid id, DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
+    public Product(Guid id, string sku, string name, string description, ProductTypeEnum productType, 
+        ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool active,
+        DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
     {
+        Sku = sku;
+        Name = name;
+        Description = description;
+        ProductType = productType;
+        Category = category;
+        Unit = unit;
+        PriceInfo = priceInfo;
+        Active = active;
     }
 
     private string _sku;
@@ -52,5 +72,5 @@ internal class Product : BaseEntity
 
     public bool Active { get; set; }
 
-    public ProductPriceInfo I { get; private set; }
+    public ProductPriceInfo PriceInfo { get; private set; }
 }
