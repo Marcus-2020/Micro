@@ -1,4 +1,4 @@
-namespace Micro.Core.Common;
+namespace Micro.Core;
 
 public static class Configuration
 {

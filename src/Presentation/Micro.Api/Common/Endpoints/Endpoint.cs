@@ -1,3 +1,5 @@
+using Micro.Api.Inventory.Products.CreateProduct;
+
 namespace Micro.Api.Common.Endpoints;
 
 public static class Endpoint
@@ -11,8 +13,8 @@ public static class Endpoint
             .MapGet("/", () => new {message = "OK"});
 
         endpoints.MapGroup("v1/inventory")
-            .WithTags("Inventory");
-            /*.MapEndpoint<CreateProductEndpoint>();*/
+            .WithTags("Inventory")
+            .MapEndpoint<CreateProductEndpoint>();
             
         endpoints.MapGroup("v1/finances")
             .WithTags("Finances");

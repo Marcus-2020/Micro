@@ -1,4 +1,6 @@
-using Micro.Core.Common;
+using FluentValidation;
+using Micro.Core;
+using Micro.Inventory.Products.CreateProduct;
 using Serilog;
 
 namespace Micro.Api.Common.Extensions;
@@ -47,6 +49,7 @@ public static class BuildExtensions
 
     public static void AddServices(this WebApplicationBuilder builder)
     {
-        
+        builder.Services.AddScoped<IValidator<CreateProductRequest>, CreateProductValidator>();
+        builder.Services.AddScoped<ICreateProductHandler, CreateProductHandler>();
     }
 }

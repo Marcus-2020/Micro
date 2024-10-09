@@ -1,5 +1,5 @@
+using Micro.Core.Common;
 using Micro.Core.Common.Entities;
-using Micro.Core.Common.ValueObjects;
 
 namespace Micro.Inventory.Common.Products;
 

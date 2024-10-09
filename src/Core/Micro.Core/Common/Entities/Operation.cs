@@ -1,6 +1,6 @@
 using Micro.Core.Common.Enums;
 
-namespace Micro.Core.Common.Entities.Operations;
+namespace Micro.Core.Common.Entities;
 
 public class Operation : SoftDeletableEntity
 {

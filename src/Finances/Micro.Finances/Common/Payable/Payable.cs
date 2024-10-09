@@ -1,3 +1,4 @@
+using Micro.Core.Common;
 using Micro.Core.Common.Entities;
 
 namespace Micro.Finances.Common.Payable;
