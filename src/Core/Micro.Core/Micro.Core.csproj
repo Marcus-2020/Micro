@@ -1,9 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="OpenTelemetry.Api">
+        <HintPath>C:\Users\Marcus\.nuget\packages\opentelemetry.api\1.9.0\lib\net8.0\OpenTelemetry.Api.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 
 </Project>

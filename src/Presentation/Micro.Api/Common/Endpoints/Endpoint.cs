@@ -1,4 +1,8 @@
 using Micro.Api.Inventory.Products.CreateProduct;
+using Micro.Core.Telemetry;
+using Microsoft.AspNetCore.Mvc;
+using OpenTelemetry.Trace;
+using Serilog;
 
 namespace Micro.Api.Common.Endpoints;
 
@@ -10,7 +14,13 @@ public static class Endpoint
         
         endpoints.MapGroup("/")
             .WithTags("Health Check")
-            .MapGet("/", () => new {message = "OK"});
+            .MapGet("/", ([FromServices] Tracer tracer) =>
+            {
+                using var span = tracer.StartActive("health-check");
+                var logger = Log.Logger;
+                logger.Information("Health check: OK");
+                return new {message = "OK"};
+            });
 
         endpoints.MapGroup("v1/inventory")
             .WithTags("Inventory")

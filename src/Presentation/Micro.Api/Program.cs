@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using Micro.Api.Common;
 using Micro.Api.Common.Endpoints;
 using Micro.Api.Common.Extensions;
+using Micro.Core;
 
 var builder = WebApplication.CreateBuilder(args);
 

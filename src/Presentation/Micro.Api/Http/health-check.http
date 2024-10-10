@@ -1,6 +1,6 @@
 @Micro.Api_HostAddress = http://localhost:5101
 
-GET {{Micro.Api_HostAddress}}/weatherforecast/
+GET {{Micro.Api_HostAddress}}/
 Accept: application/json
 
 ###
