@@ -1,5 +1,7 @@
 ## Micro - a simple ERP for simple business
 
+> This projects is in it's starting fase, more will be added every week
+
 This project is me trying to learn a lot of new programing concepts and applying in something I undestand about, 
 I have being developing ERPs for the past three years and this will be my sandbox for learning and sharing what I learned.
 
