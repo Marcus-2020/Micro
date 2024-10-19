@@ -1,8 +1,10 @@
 using System.Text;
-using FluentValidation;
 using Micro.Core;
-using Micro.Inventory.Products.CreateProduct;
+using Micro.Identity.Data;
+using Micro.Identity.Providers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Exporter;
 using OpenTelemetry.Resources;
@@ -10,7 +12,7 @@ using OpenTelemetry.Trace;
 using Serilog;
 using Serilog.Sinks.OpenTelemetry;
 
-namespace Micro.Api.Common.Extensions;
+namespace Micro.Identity.Extensions;
 
 public static class BuildExtensions
 {
@@ -32,7 +34,7 @@ public static class BuildExtensions
             Environment.GetEnvironmentVariable("JWT_KEY") ??
             throw new Exception("The JWT key need to be loaded from the enviroment variables");
     }
-
+    
     private static void LoadEnviromentVariables(string filePath)
     {
         if (!File.Exists(filePath))
@@ -49,6 +51,14 @@ public static class BuildExtensions
 
     public static void AddAuth(this WebApplicationBuilder builder)
     {
+        builder.Services.AddScoped<TokenProvider>();
+        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+        builder.Services.AddIdentityCore<IdentityUser>()
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddApiEndpoints();
+        
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {
@@ -133,7 +143,6 @@ public static class BuildExtensions
 
     public static void AddServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<IValidator<CreateProductRequest>, CreateProductValidator>();
-        builder.Services.AddScoped<ICreateProductHandler, CreateProductHandler>();
+        
     }
 }

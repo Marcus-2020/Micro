@@ -6,4 +6,5 @@ public static class Configuration
     public static string ServiceName = string.Empty;
     public static string SeqUrl = string.Empty;
     public static string SeqApiKey = string.Empty;
+    public static string JwtKey = string.Empty;
 }

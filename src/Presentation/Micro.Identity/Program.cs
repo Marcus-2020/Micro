@@ -1,7 +1,5 @@
-using Micro.Api.Common;
-using Micro.Api.Common.Endpoints;
-using Micro.Api.Common.Extensions;
-using Npgsql;
+using Micro.Identity.Extensions;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,15 +13,18 @@ builder.AddServices();
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment()) 
-    app.ConfigureDevEnviroment();
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 
-app.UseAuth();
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.UseCors(ApiConfiguration.CorsPolicyName);
-app.MapEndpoints();
+app.MapCustomIdentityApi<IdentityUser>();
 
 await app.InitializeDatabaseAsync();
 

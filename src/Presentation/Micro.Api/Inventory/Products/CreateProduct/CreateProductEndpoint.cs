@@ -7,7 +7,7 @@ public class CreateProductEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
     {
-        app.MapPost("/", HandleAsync);
+        app.MapPost("/product", HandleAsync);
     }
 
     private static async Task<IResult> HandleAsync(CreateProductRequest request, ICreateProductHandler handler)

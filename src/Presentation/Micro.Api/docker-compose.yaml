@@ -1,0 +1,30 @@
+version: '3.8'
+services:
+  database:
+    image: 'postgres:latest'
+    ports:
+      - "5432:5432"
+    env_file:
+      - docker-compose.env
+    volumes:
+      - ./Resources/db-data:/var/lib/postgresql/data
+      - ./Resources/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - postgres-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "15433:80"
+    env_file:
+      - .env
+    depends_on:
+      - database
+    networks:
+      - postgres-network
+    volumes:
+      - ./pgadmin-data:/var/lib/pgadmin/
+
+networks:
+  postgres-network:
+    driver: bridge

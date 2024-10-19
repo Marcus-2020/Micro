@@ -4,3 +4,9 @@
     build:
       context: .
       dockerfile: Presentation/Micro.Api/Dockerfile
+
+  micro.identity:
+    image: micro.identity
+    build:
+      context: .
+      dockerfile: Presentation/Micro.Identity/Dockerfile

@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Micro.Api.Inventory.Products.CreateProduct;
 using Micro.Core.Telemetry;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,16 @@ namespace Micro.Api.Common.Endpoints;
 
 public static class Endpoint
 {
+    public static void UseAuth(this WebApplication app)
+    {
+        app.UseAuthentication();
+        app.UseAuthorization();
+    }
+    
     public static void MapEndpoints(this WebApplication app)
     {
         var endpoints = app.MapGroup("");
-        
+
         endpoints.MapGroup("/")
             .WithTags("Health Check")
             .MapGet("/", ([FromServices] Tracer tracer) =>
@@ -19,8 +26,15 @@ public static class Endpoint
                 using var span = tracer.StartActive("health-check");
                 var logger = Log.Logger;
                 logger.Information("Health check: OK");
-                return new {message = "OK"};
+                return new { message = "OK" };
             });
+        
+        endpoints.MapGroup("/private")
+            .WithTags("Private")
+            .MapGet("/", ([FromServices] Tracer tracer, HttpContext context) =>
+            {
+                return new {message = context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value};
+            }).RequireAuthorization();
 
         endpoints.MapGroup("v1/inventory")
             .WithTags("Inventory")
