@@ -1,8 +1,9 @@
 using FluentValidation;
+using Micro.Inventory.Products.CreateProduct.Requests;
 
-namespace Micro.Inventory.Products.CreateProduct;
+namespace Micro.Inventory.Products.CreateProduct.Validators;
 
-public class CreateProductValidator : AbstractValidator<CreateProductRequest>
+internal class CreateProductValidator : AbstractValidator<CreateProductRequest>
 {
     public CreateProductValidator()
     {

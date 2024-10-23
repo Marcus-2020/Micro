@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Security.Claims;
 using FluentResults;
-using Micro.Core;
 using Micro.Identity.Data;
 using Micro.Identity.Entities;
 using Micro.Identity.Providers;
@@ -12,7 +11,6 @@ using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
 
 namespace Micro.Identity.Extensions;
 

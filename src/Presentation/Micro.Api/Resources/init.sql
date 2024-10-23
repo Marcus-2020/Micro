@@ -223,7 +223,7 @@ CREATE TABLE IF NOT EXISTS sales.sales
     sale_date    TIMESTAMP NOT NULL,
     sale_status  INT       NOT NULL,
     subtotal     DECIMAL   NOT NULL,
-    discout      DECIMAL   NOT NULL,
+    discount      DECIMAL   NOT NULL,
     tax          DECIMAL   NOT NULL,
     other_costs  DECIMAL   NOT NULL,
     total        DECIMAL   NOT NULL,

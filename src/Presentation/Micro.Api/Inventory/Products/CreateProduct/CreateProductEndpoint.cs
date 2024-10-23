@@ -1,5 +1,6 @@
 using Micro.Api.Common.Endpoints;
 using Micro.Inventory.Products.CreateProduct;
+using Micro.Inventory.Products.CreateProduct.Requests;
 
 namespace Micro.Api.Inventory.Products.CreateProduct;
 

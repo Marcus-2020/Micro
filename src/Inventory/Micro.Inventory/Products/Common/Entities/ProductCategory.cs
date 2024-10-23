@@ -1,7 +1,6 @@
-using Micro.Core.Common;
 using Micro.Core.Common.Entities;
 
-namespace Micro.Inventory.Common.Products;
+namespace Micro.Inventory.Products.Common.Entities;
 
 internal class ProductCategory : SoftDeletableEntity
 {
@@ -9,6 +8,18 @@ internal class ProductCategory : SoftDeletableEntity
         : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
     {
         _name = "";
+    }
+    
+    public ProductCategory(Guid id)
+        : base(id, DateTime.MinValue, DateTime.MinValue, false)
+    {
+        _name = "";
+    }
+    
+    public ProductCategory(Guid id, string name)
+        : base(id, DateTime.MinValue, DateTime.MinValue, false)
+    {
+        _name = name;
     }
     
     public ProductCategory(string name, bool active, bool isDeleted)

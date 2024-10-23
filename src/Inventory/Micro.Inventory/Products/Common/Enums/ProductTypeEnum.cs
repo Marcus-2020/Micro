@@ -1,4 +1,4 @@
-namespace Micro.Inventory.Common.Products;
+namespace Micro.Inventory.Products.Common.Enums;
 
 internal enum ProductTypeEnum
 {

@@ -1,9 +1,9 @@
-namespace Micro.Inventory.Common.Products;
+namespace Micro.Inventory.Products.Common.ValueObjects;
 
 internal record struct ProductPriceInfo(
     decimal Cost,
     decimal ProfitMargin,
-    decimal SalePrice
+    decimal SellingPrice
 )
 {
     public void SetCost(decimal cost, bool changeSalePrice = true)
@@ -12,7 +12,7 @@ internal record struct ProductPriceInfo(
         Cost = cost;
        
         if (!changeSalePrice) return;
-        SalePrice = Cost > 0 ? Cost * (ProfitMargin / 100) : 0;
+        SellingPrice = Cost > 0 ? Cost * (ProfitMargin / 100) : 0;
     }
     
     public void SetProfitMargin(decimal profitMargin, bool changeSalePrice = true)
@@ -21,15 +21,15 @@ internal record struct ProductPriceInfo(
         ProfitMargin = profitMargin;
        
         if (!changeSalePrice) return;
-        SalePrice = Cost > 0 ? Cost * (ProfitMargin / 100) : 0;
+        SellingPrice = Cost > 0 ? Cost * (ProfitMargin / 100) : 0;
     }
     
-    public void SetSalePrice(decimal price, bool changeProfitMargin = true)
+    public void SetSellingPrice(decimal price, bool changeProfitMargin = true)
     {
         if (price < 0) return;
-        SalePrice = price;
+        SellingPrice = price;
        
         if (!changeProfitMargin) return;
-        ProfitMargin = Cost > 0 ? (SalePrice / Cost) * 100 : 0;
+        ProfitMargin = Cost > 0 ? (SellingPrice / Cost) * 100 : 0;
     }
 }

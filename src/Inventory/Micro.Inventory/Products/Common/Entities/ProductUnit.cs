@@ -1,7 +1,6 @@
-using Micro.Core.Common;
 using Micro.Core.Common.Entities;
 
-namespace Micro.Inventory.Common.Products;
+namespace Micro.Inventory.Products.Common.Entities;
 
 internal class ProductUnit : SoftDeletableEntity
 {
@@ -10,6 +9,18 @@ internal class ProductUnit : SoftDeletableEntity
     {
         _name = "";
         _symbol = "";
+    }
+    
+    public ProductUnit(Guid id)
+        : base(id, DateTime.MinValue, DateTime.MinValue, false)
+    {
+        _name = "";
+    }
+    
+    public ProductUnit(Guid id, string name)
+        : base(id, DateTime.MinValue, DateTime.MinValue, false)
+    {
+        _name = name;
     }
     
     public ProductUnit(string name, string symbol, bool active)

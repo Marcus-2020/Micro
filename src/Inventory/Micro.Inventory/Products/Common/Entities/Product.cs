@@ -1,13 +1,15 @@
-using Micro.Core.Common;
 using Micro.Core.Common.Entities;
+using Micro.Inventory.Products.Common.DTOs;
+using Micro.Inventory.Products.Common.Enums;
+using Micro.Inventory.Products.Common.ValueObjects;
 
-namespace Micro.Inventory.Common.Products;
+namespace Micro.Inventory.Products.Common.Entities;
 
-internal class Product : BaseEntity
+internal class Product : SoftDeletableEntity
 {
     public Product(string sku, string name, string description, ProductTypeEnum productType, 
         ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool active)
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
     {
         Sku = sku;
         Name = name;
@@ -19,9 +21,23 @@ internal class Product : BaseEntity
         Active = active;
     }
     
+    public Product(ProductDto product)
+        : base(Guid.Parse(product.Id), product.CreatedAt, product.UpdatedAt, product.IsDeleted)
+    {
+        Sku = product.Sku;
+        Name = product.Name;
+        Description = product.Description;
+        ProductType = product.ProductType;
+        Active = product.IsActive;
+        
+        Category = new ProductCategory(Guid.Parse(product.CategoryId), product.CategoryName);
+        Unit = new ProductUnit(Guid.Parse(product.UnitId), product.UnitName);
+        PriceInfo = new ProductPriceInfo(product.CostPrice, product.ProfitMargin, product.SellingPrice);
+    }
+    
     public Product(Guid id, string sku, string name, string description, ProductTypeEnum productType, 
         ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool active,
-        DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt)
+        DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt, isDeleted)
     {
         Sku = sku;
         Name = name;

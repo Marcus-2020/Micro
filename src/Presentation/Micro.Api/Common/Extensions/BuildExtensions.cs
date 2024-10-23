@@ -1,7 +1,7 @@
 using System.Text;
-using FluentValidation;
 using Micro.Core;
-using Micro.Inventory.Products.CreateProduct;
+using Micro.Core.Common.Data;
+using Micro.Inventory.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Exporter;
@@ -20,6 +20,8 @@ public static class BuildExtensions
 
         ApiConfiguration.ConnectionString =
             builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
+        builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.Position));
+        
         Configuration.ServiceName = builder.Configuration.GetValue<string>("ServiceName") ?? "micro-api";
         Configuration.BackendUrl = builder.Configuration.GetValue<string>("Services:BackendUrl") ??
                                    Environment.GetEnvironmentVariable("BACKEND_URL") ?? string.Empty;
@@ -133,7 +135,7 @@ public static class BuildExtensions
 
     public static void AddServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddScoped<IValidator<CreateProductRequest>, CreateProductValidator>();
-        builder.Services.AddScoped<ICreateProductHandler, CreateProductHandler>();
+        builder.Services.AddTransient<IDataContextFactory, DataContextFactory>();
+        builder.Services.AddInventoryServices();
     }
 }

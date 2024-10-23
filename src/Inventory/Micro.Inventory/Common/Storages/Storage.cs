@@ -1,4 +1,3 @@
-using Micro.Core.Common;
 using Micro.Core.Common.Entities;
 
 namespace Micro.Inventory.Common.Storages;
