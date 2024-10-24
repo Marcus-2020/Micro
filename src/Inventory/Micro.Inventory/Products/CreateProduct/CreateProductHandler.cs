@@ -3,11 +3,14 @@ using FluentResults;
 using FluentValidation;
 using Micro.Core.Common.Data;
 using Micro.Core.Common.Extensions;
+using Micro.Core.Common.Infra.Messaging;
 using Micro.Core.Common.Responses;
 using Micro.Inventory.Products.Common.Data;
 using Micro.Inventory.Products.Common.Entities;
+using Micro.Inventory.Products.Common.Messaging;
 using Micro.Inventory.Products.CreateProduct.Errors;
 using Micro.Inventory.Products.CreateProduct.Errors.CantAddProduct;
+using Micro.Inventory.Products.CreateProduct.Events;
 using Micro.Inventory.Products.CreateProduct.Mappers;
 using Micro.Inventory.Products.CreateProduct.Requests;
 using Micro.Inventory.Products.CreateProduct.Responses;
@@ -20,17 +23,20 @@ internal class CreateProductHandler : ICreateProductHandler
     private readonly IValidator<CreateProductRequest> _validator;
     private readonly IDataContextFactory _dataContextFactory;
     private readonly IProductRepository _productRepository;
+    private readonly IProductMessagingProducer _messagingProducer;
 
     private readonly ILogger _logger;
 
     public CreateProductHandler(
         IValidator<CreateProductRequest> validator, 
         IDataContextFactory dataContextFactory,
-        IProductRepository productRepository)
+        IProductRepository productRepository, 
+        IProductMessagingProducer messagingProducer)
     {
         _validator = validator;
         _dataContextFactory = dataContextFactory;
         _productRepository = productRepository;
+        _messagingProducer = messagingProducer;
 
         _logger = Log.Logger.ForContext<CreateProductHandler>();
     }
@@ -100,6 +106,21 @@ internal class CreateProductHandler : ICreateProductHandler
         }
 
         await dataContext.CommitAsync();
+
+        var published = _messagingProducer.PublishMessage(
+            MessagingConstants.ProductCreated.RoutingKey,
+            new ProductCreatedEvent($"{product.Id} product created at {DateTime.UtcNow}",
+                product));
+        if (!published)
+        {
+            logger.Warning("An error occurred while publishing the ProductCreated event at {Timestamp} for the product {ProductId}",
+                DateTime.UtcNow, product.Id);
+        }
+        else
+        {
+            logger.Information("Published the ProductCreated event at {Timestamp} for the product {ProductId}",
+                DateTime.UtcNow, product.Id);
+        }
 
         return Response<CreateProductResponse>
             .Created(new(addProduct.Value.Id.ToString(), addProduct.Value.Active, addProduct.Value.CreateAt),

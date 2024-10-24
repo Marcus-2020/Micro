@@ -2,7 +2,7 @@ using Microsoft.Extensions.Options;
 
 namespace Micro.Core.Common.Data;
 
-public class DataContextFactory : IDataContextFactory
+internal class DataContextFactory : IDataContextFactory
 {
     private readonly DatabaseOptions _options;
     

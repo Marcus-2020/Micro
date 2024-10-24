@@ -34,15 +34,15 @@ public class DataContext : IDataContext
         try
         {
             _connection = new NpgsqlConnection(_options.DefaultConnection);
+            await _connection.OpenAsync();
             _transaction = await _connection.BeginTransactionAsync();
+            return Result.Ok();
         }
         catch (Exception ex)
         {
             return Result.Fail(new Error("Failed to start database connection")
                 .CausedBy(ex));
         }
-
-        return Result.Ok();
     }
 
     public async Task<Result> CommitAsync()

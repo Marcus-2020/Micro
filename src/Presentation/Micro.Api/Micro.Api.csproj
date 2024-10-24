@@ -29,6 +29,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\Core\Micro.Core\Micro.Core.csproj" />
       <ProjectReference Include="..\..\Inventory\Micro.Inventory\Micro.Inventory.csproj" />
+      <ProjectReference Include="..\..\Sales\Micro.Sales\Micro.Sales.csproj" />
     </ItemGroup>
 
 </Project>

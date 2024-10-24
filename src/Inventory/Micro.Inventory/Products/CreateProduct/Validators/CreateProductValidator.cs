@@ -22,13 +22,13 @@ internal class CreateProductValidator : AbstractValidator<CreateProductRequest>
         RuleFor(x => x.UnitId).NotEmpty()
             .WithMessage("Please specify an unit for this product");
         
-        RuleFor(x => x.PriceInfo.Cost).LessThan(0)
+        RuleFor(x => x.PriceInfo.CostPrice).GreaterThan(0)
             .WithMessage("The cost can't be less than zero");
         
-        RuleFor(x => x.PriceInfo.ProfitMargin).LessThan(0)
+        RuleFor(x => x.PriceInfo.ProfitMargin).GreaterThan(0)
             .WithMessage("The profit margin can't be less than zero");
         
-        RuleFor(x => x.PriceInfo.SalePrice).LessThan(0)
+        RuleFor(x => x.PriceInfo.SellingPrice).GreaterThan(0)
             .WithMessage("The sale price can't be less than zero");
     }
 }

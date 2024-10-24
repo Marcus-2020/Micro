@@ -7,4 +7,6 @@ public static class Configuration
     public static string SeqUrl = string.Empty;
     public static string SeqApiKey = string.Empty;
     public static string JwtKey = string.Empty;
+
+    public static string RabbitMqUri = string.Empty;
 }

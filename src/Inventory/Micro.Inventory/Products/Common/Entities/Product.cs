@@ -7,9 +7,9 @@ namespace Micro.Inventory.Products.Common.Entities;
 
 internal class Product : SoftDeletableEntity
 {
-    public Product(string sku, string name, string description, ProductTypeEnum productType, 
+    public Product(Guid id, string sku, string name, string description, ProductTypeEnum productType, 
         ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool active)
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
+        : base(id, DateTime.MinValue, DateTime.MinValue, false)
     {
         Sku = sku;
         Name = name;
@@ -22,7 +22,7 @@ internal class Product : SoftDeletableEntity
     }
     
     public Product(ProductDto product)
-        : base(Guid.Parse(product.Id), product.CreatedAt, product.UpdatedAt, product.IsDeleted)
+        : base(product.Id, product.CreatedAt, product.UpdatedAt, product.IsDeleted)
     {
         Sku = product.Sku;
         Name = product.Name;
@@ -30,8 +30,8 @@ internal class Product : SoftDeletableEntity
         ProductType = product.ProductType;
         Active = product.IsActive;
         
-        Category = new ProductCategory(Guid.Parse(product.CategoryId), product.CategoryName);
-        Unit = new ProductUnit(Guid.Parse(product.UnitId), product.UnitName);
+        Category = new ProductCategory(product.CategoryId, product.CategoryName);
+        Unit = new ProductUnit(product.UnitId, product.UnitName);
         PriceInfo = new ProductPriceInfo(product.CostPrice, product.ProfitMargin, product.SellingPrice);
     }
     

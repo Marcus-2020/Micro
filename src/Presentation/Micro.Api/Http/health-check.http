@@ -1,4 +1,22 @@
-GET https://localhost:44393/private/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIyYTMwNzAwNC1iYzM0LTRkYTctODRhMi1hOTFmYTcwYTY2ZmIiLCJlbWFpbCI6Im1pY3JvQG1pY3JvLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZXhwaXJhdGlvbiI6IjEwLzE5LzIwMjQgMjI6MjE6NTUiLCJuYmYiOjE3MjkzNzI5MTUsImV4cCI6MTcyOTM3NjUxNSwiaWF0IjoxNzI5MzcyOTE1LCJpc3MiOiJodHRwczovL2lkZW50aXR5Lm1pY3JvLmNvbSIsImF1ZCI6Imh0dHBzOi8vYXBwLm1pY3JvLmNvbSJ9.N28eZwokckxfmxnc8TCzmUrxlYsnDK5svdKjuNWBnKc
+GET http://localhost:5101/private/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJiYWUzZGQwOS1kNDYzLTQ1NmItOTI4OC1lYzM3YzkyMTRhMjIiLCJlbWFpbCI6Im1pY3JvQG1pY3JvLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZXhwaXJhdGlvbiI6IjEwLzI0LzIwMjQgMDA6NTc6NTciLCJuYmYiOjE3Mjk3Mjc4NzcsImV4cCI6MTcyOTczMTQ3NywiaWF0IjoxNzI5NzI3ODc3LCJpc3MiOiJodHRwczovL2lkZW50aXR5Lm1pY3JvLmNvbSIsImF1ZCI6Imh0dHBzOi8vYXBwLm1pY3JvLmNvbSJ9.Y_0iUwHcwTUVV0sg2USb6dwPfYY-BXhHAWuF7UjtdPQ
 
 ###
+
+POST https://localhost:44393/v1/inventory/product
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiJjZTg3ZTdlZS0yYjZmLTQ1OWUtOTQ4Yi02OTUyZWYyYjVlODIiLCJlbWFpbCI6Im1pY3JvQG1pY3JvLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvZXhwaXJhdGlvbiI6IjEwLzI0LzIwMjQgMTM6Mjg6MzkiLCJuYmYiOjE3Mjk3NzI5MTksImV4cCI6MTcyOTc3NjUxOSwiaWF0IjoxNzI5NzcyOTE5LCJpc3MiOiJodHRwczovL2lkZW50aXR5Lm1pY3JvLmNvbSIsImF1ZCI6Imh0dHBzOi8vYXBwLm1pY3JvLmNvbSJ9.Dufw4EvLTjezwJ9COaJKHP5N5_98-wz_Su3kVdfrreo
+Content-Type: application/json
+
+{
+  "sku": "MYPRO01",
+  "name": "My Product 01",
+  "description": "This is my product 01",
+  "type": 1,
+  "categoryId": "b0947bfd-ee0f-4152-83f6-176983e65718",
+  "unitId": "f2ebaa70-30ce-4385-aba6-6581d982a67d",
+  "priceInfo": {
+    "costPrice": 1.0,
+    "profitMargin": 100,
+    "sellingPrice": 2.0
+  }
+}

@@ -38,7 +38,7 @@ internal class ProductRepository : IProductRepository
                     new {id = productId},
                     transaction: dataContext.Transaction);
             
-            if (productDto.Id is null or "") 
+            if (productDto.Id.ToString() is null or "") 
                 return Result
                     .Fail(new Error("Product not found")
                     .WithMetadata("PRODUCT_NOT_FOUND", string.Empty));
@@ -104,14 +104,14 @@ internal class ProductRepository : IProductRepository
                 sql,
                 new
                 {
-                    id = product.Id.ToString(),
+                    id = product.Id,
                     sku = product.Sku,
                     name = product.Name,
                     description = product.Description,
                     productType = (int)product.ProductType,
-                    categoryId = product.Category.Id.ToString(),
-                    unitId = product.Unit.Id.ToString(),
-                    costPrice = product.PriceInfo.Cost,
+                    categoryId = product.Category.Id,
+                    unitId = product.Unit.Id,
+                    costPrice = product.PriceInfo.CostPrice,
                     profitMargin = product.PriceInfo.ProfitMargin,
                     sellingPrice = product.PriceInfo.SellingPrice,
                     createdAt = DateTime.UtcNow,
@@ -163,7 +163,7 @@ internal class ProductRepository : IProductRepository
                     productType = (int)product.ProductType,
                     categoryId = product.Category.Id.ToString(),
                     unitId = product.Unit.Id.ToString(),
-                    costPrice = product.PriceInfo.Cost,
+                    costPrice = product.PriceInfo.CostPrice,
                     profitMargin = product.PriceInfo.ProfitMargin,
                     sellingPrice = product.PriceInfo.SellingPrice,
                 },
@@ -223,7 +223,7 @@ internal class ProductRepository : IProductRepository
             FROM inventory.products p
                 LEFT JOIN inventory.categories c ON p.category_id = c.id
                 LEFT JOIN inventory.units u ON p.unit_id = u.id
-            WHERE Sku = @sku OR Name = @name
+            WHERE p.Sku = @sku OR p.Name = @name
             """;
 
         if (dataContext is { IsConnectionOpen: false } || dataContext.Connection is null)
@@ -236,6 +236,7 @@ internal class ProductRepository : IProductRepository
             var productDtos = (await dataContext.Connection
                 .QueryAsync<ProductDto>(
                     sql,
+                    new {sku, name},
                     transaction: dataContext.Transaction)).ToList();
             
             return Result.Ok(productDtos.Select(x => new Product(x)));

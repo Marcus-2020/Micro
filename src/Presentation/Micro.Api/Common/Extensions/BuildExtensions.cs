@@ -1,7 +1,9 @@
 using System.Text;
 using Micro.Core;
 using Micro.Core.Common.Data;
+using Micro.Core.DependencyInjection;
 using Micro.Inventory.DependencyInjection;
+using Micro.Sales.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using OpenTelemetry.Exporter;
@@ -25,10 +27,14 @@ public static class BuildExtensions
         Configuration.ServiceName = builder.Configuration.GetValue<string>("ServiceName") ?? "micro-api";
         Configuration.BackendUrl = builder.Configuration.GetValue<string>("Services:BackendUrl") ??
                                    Environment.GetEnvironmentVariable("BACKEND_URL") ?? string.Empty;
+     
         Configuration.SeqUrl = builder.Configuration.GetValue<string>("Seq:Url") ??
                                Environment.GetEnvironmentVariable("SEQ_URL") ?? string.Empty;
         Configuration.SeqApiKey = builder.Configuration.GetValue<string>("Seq:ApiKey") ??
                                   Environment.GetEnvironmentVariable("SEQ_API_KEY") ?? string.Empty;
+        
+        Configuration.RabbitMqUri = builder.Configuration.GetValue<string>("Services:RabbitMqUri") ??
+                                   Environment.GetEnvironmentVariable("RABBIT_MQ_URI") ?? string.Empty;
 
         Configuration.JwtKey =
             Environment.GetEnvironmentVariable("JWT_KEY") ??
@@ -135,7 +141,8 @@ public static class BuildExtensions
 
     public static void AddServices(this WebApplicationBuilder builder)
     {
-        builder.Services.AddTransient<IDataContextFactory, DataContextFactory>();
+        builder.Services.AddCoreServices();
         builder.Services.AddInventoryServices();
+        builder.Services.AddSalesServices();
     }
 }

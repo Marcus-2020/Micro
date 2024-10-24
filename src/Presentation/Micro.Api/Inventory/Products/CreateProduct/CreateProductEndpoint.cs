@@ -8,7 +8,8 @@ public class CreateProductEndpoint : IEndpoint
 {
     public static void Map(IEndpointRouteBuilder app)
     {
-        app.MapPost("/product", HandleAsync);
+        app.MapPost("/product", HandleAsync)
+            .RequireAuthorization();
     }
 
     private static async Task<IResult> HandleAsync(CreateProductRequest request, ICreateProductHandler handler)

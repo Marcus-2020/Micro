@@ -11,6 +11,7 @@ internal static class CreateProductMapper
     internal static Product ToProduct(this CreateProductRequest request)
     {
         return new Product(
+            Guid.NewGuid(),
             request.Sku,
             request.Name,
             request.Description,
@@ -22,6 +23,6 @@ internal static class CreateProductMapper
 
     internal static ProductPriceInfo ToPriceInfo(this CreateProductPriceInfo priceInfo)
     {
-        return new ProductPriceInfo(priceInfo.Cost, priceInfo.ProfitMargin, priceInfo.SalePrice);
+        return new ProductPriceInfo(priceInfo.CostPrice, priceInfo.ProfitMargin, priceInfo.SellingPrice);
     }
 }
