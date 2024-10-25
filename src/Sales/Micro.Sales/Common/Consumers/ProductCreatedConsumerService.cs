@@ -12,15 +12,20 @@ public class ProductCreatedConsumerService : IHostedService
 {
     private IConnection _connection;
     private IModel _channel;
-    private EventingBasicConsumer _consumer;
+    private AsyncEventingBasicConsumer _consumer;
     private string? _consumerTag;
+    private readonly IServiceProvider _serviceProvider;
 
-    public ProductCreatedConsumerService()
+    public ProductCreatedConsumerService(IServiceProvider serviceProvider)
     {
-        ConnectionFactory factory = new();
-        factory.Uri = new Uri(Configuration.RabbitMqUri);
-        factory.ClientProvidedName = Configuration.ServiceName;
-        
+        _serviceProvider = serviceProvider;
+        ConnectionFactory factory = new()
+        {
+            Uri = new Uri(Configuration.RabbitMqUri),
+            ClientProvidedName = Configuration.ServiceName,
+            DispatchConsumersAsync = true
+        };
+
         string exchangeName = MessagingConstants.DirectExchange;
         string routingKey = MessagingConstants.ProductCreated.RoutingKey;
         string queueName = MessagingConstants.ProductCreated.QueueName;
@@ -28,43 +33,48 @@ public class ProductCreatedConsumerService : IHostedService
         _connection = factory.CreateConnection();
         _channel = _connection.CreateModel();
         _channel.BasicQos(0, 1, false);
-        
+
         _channel.ExchangeDeclare(exchangeName, ExchangeType.Direct);
-        
         _channel.QueueDeclare(queueName, false, false, false, null);
         _channel.QueueBind(queueName, exchangeName, routingKey, null);
-        
-        _consumer = new EventingBasicConsumer(_channel);
+
+        _consumer = new AsyncEventingBasicConsumer(_channel);
     }
-    
+
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         Log.Logger.Information("Starting ProductCreatedConsumerService");
-        
-        while (!cancellationToken.IsCancellationRequested)
-        {
-            _consumer.Received += async (_, args) =>
-            {
-                var body = args.Body.ToArray();
-                string message = Encoding.UTF8.GetString(body);
-                Log.Logger
-                    .ForContext<ProductCreatedConsumerService>()
-                    .ForContext("message", message)
-                    .Information("Message received");
-                
-                _channel.BasicAck(args.DeliveryTag, false);
-            };
-            
-            if (_consumerTag is null)
-                _consumerTag = _channel.BasicConsume(MessagingConstants.ProductCreated.QueueName, false, _consumer);
-        }
+
+        _consumer.Received += HandleMessageAsync;
+
+        _consumerTag = _channel.BasicConsume(MessagingConstants.ProductCreated.QueueName, false, _consumer);
+
+        await Task.CompletedTask;
     }
 
-    public async Task StopAsync(CancellationToken cancellationToken)
+    private async Task HandleMessageAsync(object sender, BasicDeliverEventArgs args)
     {
-        _channel.BasicCancel(_consumerTag);
+        var body = args.Body.ToArray();
+        string message = Encoding.UTF8.GetString(body);
+        Log.Logger
+            .ForContext<ProductCreatedConsumerService>()
+            .ForContext("message", message)
+            .Information("Message received");
+
+        _channel.BasicAck(args.DeliveryTag, false);
+        await Task.Yield();
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        if (_consumerTag != null)
+        {
+            _channel.BasicCancel(_consumerTag);
+        }
         
         _channel.Close();
         _connection.Close();
+        
+        return Task.CompletedTask;
     }
 }

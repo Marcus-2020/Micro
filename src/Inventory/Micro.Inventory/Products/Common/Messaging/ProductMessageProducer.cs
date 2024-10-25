@@ -1,4 +1,7 @@
+using System.Text;
+using System.Text.Json;
 using Micro.Core.Common.Infra.Messaging;
+using Micro.Inventory.Products.CreateProduct.Events;
 
 namespace Micro.Inventory.Products.Common.Messaging;
 
@@ -18,8 +21,16 @@ internal class ProductMessageProducer : IProductMessagingProducer
             MessagingConstants.ProductCreated.RoutingKey);
     }
 
-    public bool PublishMessage(string routingKey, IMessage message)
+    public bool PublishMessage(string routingKey, string type, IMessage message)
     {
-        return _messageProducer.PublishMessage(MessagingConstants.DirectExchange, routingKey, message);
+        switch (type)
+        {
+            case "ProductCreated":
+                var json = JsonSerializer.Serialize(message as ProductCreatedEvent);
+                var byteArray = Encoding.UTF8.GetBytes(json);
+                return _messageProducer.PublishMessage(MessagingConstants.DirectExchange, routingKey, byteArray);
+            default:
+                return _messageProducer.PublishMessage(MessagingConstants.DirectExchange, routingKey, message);
+        }
     }
 }

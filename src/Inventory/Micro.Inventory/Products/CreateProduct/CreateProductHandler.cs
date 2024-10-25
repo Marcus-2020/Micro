@@ -109,18 +109,17 @@ internal class CreateProductHandler : ICreateProductHandler
 
         var published = _messagingProducer.PublishMessage(
             MessagingConstants.ProductCreated.RoutingKey,
+            "ProductCreated",
             new ProductCreatedEvent($"{product.Id} product created at {DateTime.UtcNow}",
                 product));
+        
         if (!published)
-        {
-            logger.Warning("An error occurred while publishing the ProductCreated event at {Timestamp} for the product {ProductId}",
+            logger.Warning(
+                "An error occurred while publishing the ProductCreated event at {Timestamp} for the product {ProductId}",
                 DateTime.UtcNow, product.Id);
-        }
         else
-        {
             logger.Information("Published the ProductCreated event at {Timestamp} for the product {ProductId}",
                 DateTime.UtcNow, product.Id);
-        }
 
         return Response<CreateProductResponse>
             .Created(new(addProduct.Value.Id.ToString(), addProduct.Value.Active, addProduct.Value.CreateAt),
@@ -137,7 +136,7 @@ internal class CreateProductHandler : ICreateProductHandler
                     .WithMetadata(ErrorsConstants.AddProductFailed, string.Empty));
         }
 
-        return Result.Ok();
+        return Result.Ok((product.Id, product.Active, DateTime.UtcNow));
     }
 
     private async Task<Result<bool>> CanAddProductAsync(IDataContext dataContext, Product product)

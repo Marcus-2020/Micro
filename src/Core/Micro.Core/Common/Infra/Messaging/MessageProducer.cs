@@ -51,6 +51,21 @@ internal class MessageProducer : IMessageProducer
         }
     }
 
+    public bool PublishMessage(string exchangeName, string routingKey, byte[] message, bool restartChannelIfFailed = false)
+    {
+        try
+        {
+            _channel.BasicPublish(exchangeName, routingKey, null, message);
+            return true;
+        }
+        catch (ChannelClosedException)
+        {
+            if (!restartChannelIfFailed) return false;
+            _channel = _connection.CreateModel();
+            return false;
+        }
+    }
+
     public void Dispose()
     {
         Dispose(true);
