@@ -1,9 +1,9 @@
 using FluentValidation;
-using Micro.Inventory.Categories.Common.Data;
-using Micro.Inventory.Categories.Common.Messaging;
-using Micro.Inventory.Categories.CreateCategory;
-using Micro.Inventory.Contracts.Categories.CreateCategory;
+using Micro.Inventory.Contracts.Products.Categories.CreateCategory;
 using Micro.Inventory.Contracts.Products.CreateProduct;
+using Micro.Inventory.Products.Categories.Common.Data;
+using Micro.Inventory.Products.Categories.Common.Messaging;
+using Micro.Inventory.Products.Categories.CreateCategory;
 using Micro.Inventory.Products.Common.Data;
 using Micro.Inventory.Products.Common.Messaging;
 using Micro.Inventory.Products.CreateProduct;

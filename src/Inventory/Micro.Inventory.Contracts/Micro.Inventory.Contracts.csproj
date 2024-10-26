@@ -11,7 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Categories\Common\" />
       <Folder Include="Products\Common\" />
     </ItemGroup>
 
