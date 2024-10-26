@@ -6,10 +6,10 @@ namespace Micro.Inventory.Categories.Common.Data;
 
 internal interface ICategoryRepository
 {
-    Task<Result<ProductCategory>> GetByIdAsync(IDataContext dataContext, string categoryId);
+    Task<Result<ProductCategory>> GetByIdAsync(IDataContext dataContext, Guid categoryId);
     Task<Result<IEnumerable<ProductCategory>>> GetAllAsync(IDataContext dataContext);
     Task<Result<(Guid Id, DateTime CreatedAt)>> AddAsync(IDataContext dataContext, ProductCategory category);
     Task<Result> UpdateAsync(IDataContext dataContext, ProductCategory category);
-    Task<Result> DeleteAsync(IDataContext dataContext, string categoryId);
+    Task<Result> DeleteAsync(IDataContext dataContext, Guid categoryId);
     Task<Result<IEnumerable<ProductCategory>>> GetByName(IDataContext dataContext, string name);
 }

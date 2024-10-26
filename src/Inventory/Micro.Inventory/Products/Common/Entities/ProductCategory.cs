@@ -8,31 +8,22 @@ internal class ProductCategory : SoftDeletableEntity
         : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
     {
         _name = "";
+        _description = "";
     }
     
-    public ProductCategory(Guid id)
-        : base(id, DateTime.MinValue, DateTime.MinValue, false)
-    {
-        _name = "";
-    }
-    
-    public ProductCategory(Guid id, string name)
+    public ProductCategory(Guid id, string name = "", string description = "")
         : base(id, DateTime.MinValue, DateTime.MinValue, false)
     {
         _name = name;
+        _description = description;
     }
     
-    public ProductCategory(string name, bool active, bool isDeleted)
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, isDeleted)
+    public ProductCategory(Guid id, string name, string description, bool active, bool isDeleted, 
+        DateTime createdAt, DateTime? updatedAt = null, DateTime? deletedAt = null) 
+        : base(id, createdAt, updatedAt, isDeleted, deletedAt)
     {
         _name = name;
-        Active = active;
-    }
-    
-    public ProductCategory(Guid id, string name, bool active, bool isDeleted, 
-        DateTime createdAt, DateTime updatedAt) : base(id, createdAt, updatedAt, isDeleted)
-    {
-        _name = name;
+        _description = description;
         Active = active;
     }
     
@@ -41,6 +32,13 @@ internal class ProductCategory : SoftDeletableEntity
     {
         get => _name ??= "";
         private set => _name = value ?? "";
+    }
+    
+    private string _description;
+    public string Description
+    {
+        get => _description ??= "";
+        private set => _description = value ?? "";
     }
 
     public bool Active { get; private set; }

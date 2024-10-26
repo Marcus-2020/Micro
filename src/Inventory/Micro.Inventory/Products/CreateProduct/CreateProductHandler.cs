@@ -5,8 +5,8 @@ using Micro.Core.Common.Data;
 using Micro.Core.Common.Extensions;
 using Micro.Core.Common.Infra.Messaging;
 using Micro.Core.Common.Responses;
+using Micro.Inventory.Contracts.Products.Common.Events;
 using Micro.Inventory.Contracts.Products.CreateProduct;
-using Micro.Inventory.Contracts.Products.CreateProduct.Events;
 using Micro.Inventory.Products.Common.Data;
 using Micro.Inventory.Products.Common.Entities;
 using Micro.Inventory.Products.Common.Messaging;
@@ -22,7 +22,7 @@ internal class CreateProductHandler : ICreateProductHandler
     private readonly IValidator<CreateProductRequest> _validator;
     private readonly IDataContextFactory _dataContextFactory;
     private readonly IProductRepository _productRepository;
-    private readonly IProductMessagingProducer _messagingProducer;
+    private readonly IProductMessageProducer _messageProducer;
 
     private readonly ILogger _logger;
 
@@ -30,12 +30,12 @@ internal class CreateProductHandler : ICreateProductHandler
         IValidator<CreateProductRequest> validator, 
         IDataContextFactory dataContextFactory,
         IProductRepository productRepository, 
-        IProductMessagingProducer messagingProducer)
+        IProductMessageProducer messageProducer)
     {
         _validator = validator;
         _dataContextFactory = dataContextFactory;
         _productRepository = productRepository;
-        _messagingProducer = messagingProducer;
+        _messageProducer = messageProducer;
 
         _logger = Log.Logger.ForContext<CreateProductHandler>();
     }
@@ -106,7 +106,7 @@ internal class CreateProductHandler : ICreateProductHandler
 
         await dataContext.CommitAsync();
 
-        var published = _messagingProducer.PublishMessage(
+        var published = _messageProducer.PublishMessage(
             MessagingConstants.ProductCreated.RoutingKey,
             "ProductCreated",
             new ProductCreatedEvent(product.Id.ToString(), product.Sku, product.Name, product.Description,

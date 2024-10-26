@@ -1,7 +1,7 @@
 using Micro.Sales.Common.Consumers;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Micro.Sales.DependencyInjection;
+namespace Micro.Sales.Common.DependencyInjection;
 
 public static class Container
 {

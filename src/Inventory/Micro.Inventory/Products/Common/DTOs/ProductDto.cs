@@ -1,8 +1,10 @@
+using Micro.Inventory.Products.Common.Entities;
 using Micro.Inventory.Products.Common.Enums;
+using Micro.Inventory.Products.Common.ValueObjects;
 
 namespace Micro.Inventory.Products.Common.DTOs;
 
-internal class ProductDto(
+internal record ProductDto(
     Guid Id,
     string Sku,
     string Name,
@@ -20,21 +22,19 @@ internal class ProductDto(
     DateTime? DeletedAt,
     bool IsActive)
 {
-    public Guid Id { get; init; } = Id;
-    public string Sku { get; init; } = Sku;
-    public string Name { get; init; } = Name;
-    public string Description { get; init; } = Description;
-    public ProductTypeEnum ProductType { get; init; } = ProductType;
-    public Guid CategoryId { get; init; } = CategoryId;
-    public string CategoryName { get; init; } = CategoryName;
-    public Guid UnitId { get; init; } = UnitId;
-    public string UnitName { get; init; } = UnitName;
-    public decimal CostPrice { get; init; } = CostPrice;
-    public decimal ProfitMargin { get; init; } = ProfitMargin;
-    public decimal SellingPrice { get; init; } = SellingPrice;
-    public DateTime CreatedAt { get; init; } = CreatedAt;
-    public DateTime? UpdatedAt { get; init; } = UpdatedAt;
-    public DateTime? DeletedAt { get; init; } = DeletedAt;
-    public bool IsActive { get; init; } = IsActive;
     public bool IsDeleted => DeletedAt is not null;
+
+    public Product ToProduct()
+    {
+        return new Product(
+            Id,
+            Sku,
+            Name,
+            Description,
+            ProductType,
+            new ProductCategory(CategoryId, CategoryName),
+            new ProductUnit(UnitId, UnitName),
+            new ProductPriceInfo(CostPrice, ProfitMargin, SellingPrice),
+            IsActive, IsDeleted, CreatedAt, UpdatedAt, DeletedAt);
+    }
 }

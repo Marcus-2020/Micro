@@ -1,5 +1,4 @@
 using Micro.Core.Common.Entities;
-using Micro.Inventory.Products.Common.DTOs;
 using Micro.Inventory.Products.Common.Enums;
 using Micro.Inventory.Products.Common.ValueObjects;
 
@@ -21,23 +20,10 @@ internal class Product : SoftDeletableEntity
         Active = active;
     }
     
-    public Product(ProductDto product)
-        : base(product.Id, product.CreatedAt, product.UpdatedAt, product.IsDeleted)
-    {
-        Sku = product.Sku;
-        Name = product.Name;
-        Description = product.Description;
-        ProductType = product.ProductType;
-        Active = product.IsActive;
-        
-        Category = new ProductCategory(product.CategoryId, product.CategoryName);
-        Unit = new ProductUnit(product.UnitId, product.UnitName);
-        PriceInfo = new ProductPriceInfo(product.CostPrice, product.ProfitMargin, product.SellingPrice);
-    }
-    
     public Product(Guid id, string sku, string name, string description, ProductTypeEnum productType, 
-        ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool active,
-        DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt, isDeleted)
+        ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool active, bool isDeleted,
+        DateTime createdAt, DateTime? updatedAt = null, DateTime? deletedAt = null) 
+        : base(id, createdAt, updatedAt, isDeleted, deletedAt)
     {
         Sku = sku;
         Name = name;

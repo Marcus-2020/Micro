@@ -2,7 +2,7 @@ using System.Text;
 using System.Text.Json;
 using Micro.Core;
 using Micro.Core.Common.Infra.Messaging;
-using Micro.Inventory.Contracts.Products.CreateProduct.Events;
+using Micro.Inventory.Contracts.Products.Common.Events;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;

@@ -1,6 +1,6 @@
 ﻿using Micro.Core.Common.Infra.Messaging;
 
-namespace Micro.Inventory.Contracts.Products.CreateProduct.Events;
+namespace Micro.Inventory.Contracts.Products.Common.Events;
 
 public record ProductCreatedEvent(
     string ProductId,

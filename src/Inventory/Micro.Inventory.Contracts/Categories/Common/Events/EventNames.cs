@@ -1,4 +1,4 @@
-﻿namespace Micro.Inventory.Contracts.Categories.CreateCategory.Events;
+﻿namespace Micro.Inventory.Contracts.Categories.Common.Events;
 
 public static class EventNames
 {

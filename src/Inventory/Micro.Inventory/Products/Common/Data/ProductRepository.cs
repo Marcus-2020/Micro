@@ -4,13 +4,12 @@ using Micro.Core.Common.Data;
 using Micro.Inventory.Products.Common.Data.Errors;
 using Micro.Inventory.Products.Common.DTOs;
 using Micro.Inventory.Products.Common.Entities;
-using Micro.Inventory.Products.Common.ValueObjects;
 
 namespace Micro.Inventory.Products.Common.Data;
 
 internal class ProductRepository : IProductRepository
 {
-    public async Task<Result<Product>> GetByIdAsync(IDataContext dataContext, string productId)
+    public async Task<Result<Product>> GetByIdAsync(IDataContext dataContext, Guid productId)
     {
         var sql = 
             """
@@ -22,7 +21,7 @@ internal class ProductRepository : IProductRepository
             FROM inventory.products p
                 LEFT JOIN inventory.categories c ON p.category_id = c.id
                 LEFT JOIN inventory.units u ON p.unit_id = u.id
-            WHERE Id = @id
+            WHERE p.Id = @id 
             """;
 
         if (dataContext is { IsConnectionOpen: false } || dataContext.Connection is null)
@@ -43,11 +42,11 @@ internal class ProductRepository : IProductRepository
                     .Fail(new Error("Product not found")
                     .WithMetadata("PRODUCT_NOT_FOUND", string.Empty));
             
-            return Result.Ok(new Product(productDto));
+            return Result.Ok(productDto.ToProduct());
         }
         catch (Exception ex)
         {
-            return Result.Fail(new GetProductByIdError(ex, productId));
+            return Result.Fail(new GetProductByIdError(ex, productId.ToString()));
         }
     }
 
@@ -63,6 +62,7 @@ internal class ProductRepository : IProductRepository
             FROM inventory.products p
                 LEFT JOIN inventory.categories c ON p.category_id = c.id
                 LEFT JOIN inventory.units u ON p.unit_id = u.id
+                WHERE p.deleted_at IS NULL
             """;
 
         if (dataContext is { IsConnectionOpen: false } || dataContext.Connection is null)
@@ -77,7 +77,7 @@ internal class ProductRepository : IProductRepository
                     sql,
                     transaction: dataContext.Transaction)).ToList();
             
-            return Result.Ok(productDtos.Select(x => new Product(x)));
+            return Result.Ok(productDtos.Select(x => x.ToProduct()));
         }
         catch (Exception ex)
         {
@@ -143,7 +143,8 @@ internal class ProductRepository : IProductRepository
                 unit_id = @unitId, 
                 cost_price = @costPrice, 
                 profit_margin = @profitMargin, 
-                selling_price = @sellingPrice
+                selling_price = @sellingPrice,
+                updated_at = @updatedAt
             WHERE id = @id
             """;
 
@@ -158,16 +159,17 @@ internal class ProductRepository : IProductRepository
                 sql,
                 new
                 {
-                    id = product.Id.ToString(),
+                    id = product.Id,
                     sku = product.Sku,
                     name = product.Name,
                     description = product.Description,
                     productType = (int)product.ProductType,
-                    categoryId = product.Category.Id.ToString(),
-                    unitId = product.Unit.Id.ToString(),
+                    categoryId = product.Category.Id,
+                    unitId = product.Unit.Id,
                     costPrice = product.PriceInfo.CostPrice,
                     profitMargin = product.PriceInfo.ProfitMargin,
                     sellingPrice = product.PriceInfo.SellingPrice,
+                    updatedAt = DateTime.UtcNow,
                 },
                 dataContext.Transaction);
 
@@ -175,11 +177,11 @@ internal class ProductRepository : IProductRepository
         }
         catch (Exception ex)
         {
-            return Result.Fail(new AddProductError(ex));
+            return Result.Fail(new UpdateProductError(ex, product.Id.ToString()));
         }
     }
 
-    public async Task<Result> DeleteAsync(IDataContext dataContext, string productId)
+    public async Task<Result> DeleteAsync(IDataContext dataContext, Guid productId)
     {
         var sql = 
             """
@@ -209,7 +211,7 @@ internal class ProductRepository : IProductRepository
         }
         catch (Exception ex)
         {
-            return Result.Fail(new AddProductError(ex));
+            return Result.Fail(new DeleteProductError(ex, productId.ToString()));
         }
     }
 
@@ -225,7 +227,7 @@ internal class ProductRepository : IProductRepository
             FROM inventory.products p
                 LEFT JOIN inventory.categories c ON p.category_id = c.id
                 LEFT JOIN inventory.units u ON p.unit_id = u.id
-            WHERE p.Sku = @sku OR p.Name = @name
+            WHERE p.sku = @sku OR p.name = @name AND p.deleted_at IS NULL
             """;
 
         if (dataContext is { IsConnectionOpen: false } || dataContext.Connection is null)
@@ -241,7 +243,7 @@ internal class ProductRepository : IProductRepository
                     new {sku, name},
                     transaction: dataContext.Transaction)).ToList();
             
-            return Result.Ok(productDtos.Select(x => new Product(x)));
+            return Result.Ok(productDtos.Select(x => x.ToProduct()));
         }
         catch (Exception ex)
         {

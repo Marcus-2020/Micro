@@ -1,15 +1,16 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.Json;
 using Micro.Core.Common.Infra.Messaging;
-using Micro.Inventory.Contracts.Products.Common.Events;
+using Micro.Inventory.Contracts.Categories.Common.Events;
+using EventNames = Micro.Inventory.Contracts.Categories.Common.Events.EventNames;
 
-namespace Micro.Inventory.Products.Common.Messaging;
+namespace Micro.Inventory.Categories.Common.Messaging;
 
-internal class ProductMessageProducer : IProductMessageProducer
+public class CategoryMessageProducer : ICategoryMessageProducer
 {
     private readonly IMessageProducer _messageProducer;
 
-    public ProductMessageProducer(IMessageProducer messageProducer)
+    public CategoryMessageProducer(IMessageProducer messageProducer)
     {
         _messageProducer = messageProducer;
         
@@ -25,17 +26,17 @@ internal class ProductMessageProducer : IProductMessageProducer
     {
         switch (type)
         {
-            case EventNames.ProductCreated:
-                var productCreated = message as ProductCreatedEvent;
-                if (productCreated is null) return false;
+            case EventNames.CategoryCreated:
+                var categoryCreated = message as CategoryCreatedEvent;
+                if (categoryCreated is null) return false;
                 
-                var json = JsonSerializer.Serialize(productCreated);
+                var json = JsonSerializer.Serialize(categoryCreated);
                 var byteArray = Encoding.UTF8.GetBytes(json);
                 Dictionary<string, object> props = new()
                 {
-                    { nameof(ProductCreatedEvent.Type), productCreated.Type },
-                    { nameof(ProductCreatedEvent.Origin), productCreated.Origin },
-                    { nameof(ProductCreatedEvent.Version), productCreated.Version },
+                    { nameof(CategoryCreatedEvent.Type), categoryCreated.Type },
+                    { nameof(CategoryCreatedEvent.Origin), categoryCreated.Origin },
+                    { nameof(CategoryCreatedEvent.Version), categoryCreated.Version },
                 };
 
                 return _messageProducer.PublishMessage(MessagingConstants.DirectExchange, routingKey, byteArray,
