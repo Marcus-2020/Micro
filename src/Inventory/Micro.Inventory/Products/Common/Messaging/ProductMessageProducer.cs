@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using Micro.Core.Common.Infra.Messaging;
-using Micro.Inventory.Products.CreateProduct.Events;
+using Micro.Inventory.Products.Contracts.Events;
 
 namespace Micro.Inventory.Products.Common.Messaging;
 
@@ -26,9 +26,20 @@ internal class ProductMessageProducer : IProductMessagingProducer
         switch (type)
         {
             case "ProductCreated":
-                var json = JsonSerializer.Serialize(message as ProductCreatedEvent);
+                var productCreated = message as ProductCreatedEvent;
+                if (productCreated is null) return false;
+                
+                var json = JsonSerializer.Serialize(productCreated);
                 var byteArray = Encoding.UTF8.GetBytes(json);
-                return _messageProducer.PublishMessage(MessagingConstants.DirectExchange, routingKey, byteArray);
+                Dictionary<string, object> props = new()
+                {
+                    { nameof(ProductCreatedEvent.Type), productCreated.Type },
+                    { nameof(ProductCreatedEvent.Origin), productCreated.Origin },
+                    { nameof(ProductCreatedEvent.Version), productCreated.Version },
+                };
+
+                return _messageProducer.PublishMessage(MessagingConstants.DirectExchange, routingKey, byteArray,
+                    basicPropertiesHeaders: props);
             default:
                 return _messageProducer.PublishMessage(MessagingConstants.DirectExchange, routingKey, message);
         }

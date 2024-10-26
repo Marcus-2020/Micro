@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Core\Micro.Core\Micro.Core.csproj" />
+      <ProjectReference Include="..\..\Inventory\Micro.Inventory.Contracts\Micro.Inventory.Contracts.csproj" />
     </ItemGroup>
 
     <ItemGroup>

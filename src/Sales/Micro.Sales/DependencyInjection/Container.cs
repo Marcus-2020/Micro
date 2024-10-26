@@ -7,6 +7,6 @@ public static class Container
 {
     public static void AddSalesServices(this IServiceCollection sc)
     {
-        sc.AddHostedService<ProductCreatedConsumerService>();
+        sc.AddHostedService<ProductConsumer>();
     }
 }

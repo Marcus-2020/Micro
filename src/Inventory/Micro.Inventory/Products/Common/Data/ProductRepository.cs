@@ -85,7 +85,7 @@ internal class ProductRepository : IProductRepository
         }
     }
 
-    public async Task<Result<string>> AddAsync(IDataContext dataContext, Product product)
+    public async Task<Result<(Guid Id, DateTime CreatedAt)>> AddAsync(IDataContext dataContext, Product product)
     {
         var sql = 
             """
@@ -100,6 +100,8 @@ internal class ProductRepository : IProductRepository
         
         try
         {
+            var createdAt = DateTime.UtcNow;
+            
             await dataContext.Connection.ExecuteAsync(
                 sql,
                 new
@@ -114,12 +116,12 @@ internal class ProductRepository : IProductRepository
                     costPrice = product.PriceInfo.CostPrice,
                     profitMargin = product.PriceInfo.ProfitMargin,
                     sellingPrice = product.PriceInfo.SellingPrice,
-                    createdAt = DateTime.UtcNow,
+                    createdAt,
                     isActive = true,
                 },
                 dataContext.Transaction);
 
-            return product.Id.ToString();
+            return (product.Id, createdAt);
         }
         catch (Exception ex)
         {

@@ -8,9 +8,9 @@ using Micro.Core.Common.Responses;
 using Micro.Inventory.Products.Common.Data;
 using Micro.Inventory.Products.Common.Entities;
 using Micro.Inventory.Products.Common.Messaging;
+using Micro.Inventory.Products.Contracts.Events;
 using Micro.Inventory.Products.CreateProduct.Errors;
 using Micro.Inventory.Products.CreateProduct.Errors.CantAddProduct;
-using Micro.Inventory.Products.CreateProduct.Events;
 using Micro.Inventory.Products.CreateProduct.Mappers;
 using Micro.Inventory.Products.CreateProduct.Requests;
 using Micro.Inventory.Products.CreateProduct.Responses;
@@ -110,8 +110,10 @@ internal class CreateProductHandler : ICreateProductHandler
         var published = _messagingProducer.PublishMessage(
             MessagingConstants.ProductCreated.RoutingKey,
             "ProductCreated",
-            new ProductCreatedEvent($"{product.Id} product created at {DateTime.UtcNow}",
-                product));
+            new ProductCreatedEvent(product.Id.ToString(), product.Sku, product.Name, product.Description,
+                (int)product.ProductType, product.Category.Id.ToString(), product.Unit.Id.ToString(),
+                product.PriceInfo.CostPrice, product.PriceInfo.ProfitMargin, product.PriceInfo.SellingPrice,
+                product.CreatedAt));
         
         if (!published)
             logger.Warning(
@@ -136,7 +138,7 @@ internal class CreateProductHandler : ICreateProductHandler
                     .WithMetadata(ErrorsConstants.AddProductFailed, string.Empty));
         }
 
-        return Result.Ok((product.Id, product.Active, DateTime.UtcNow));
+        return Result.Ok((addProduct.Value.Id, product.Active, addProduct.Value.CreatedAt));
     }
 
     private async Task<Result<bool>> CanAddProductAsync(IDataContext dataContext, Product product)

@@ -8,7 +8,7 @@ namespace Micro.Core.Common.Infra.Messaging;
 internal class MessageProducer : IMessageProducer
 {
     private readonly IConnection _connection;
-    private IModel? _channel;
+    private readonly IModel? _channel;
     
     public MessageProducer()
     {
@@ -33,35 +33,49 @@ internal class MessageProducer : IMessageProducer
         _channel.QueueBind(queueName, exchangeName, routingKey, null);
     }
     
-    public bool PublishMessage(string exchangeName, string routingKey, IMessage message, bool restartChannelIfFailed = false)
+    public bool PublishMessage(string exchangeName, string routingKey, IMessage message)
     {
         try
         {
-            string json = JsonSerializer.Serialize(message);
-            byte[] messageBytes = Encoding.UTF8.GetBytes(json);
+            lock (_channel)
+            {
+                string json = JsonSerializer.Serialize(message);
+                byte[] messageBytes = Encoding.UTF8.GetBytes(json);
 
-            _channel.BasicPublish(exchangeName, routingKey, null, messageBytes);
+                _channel.BasicPublish(exchangeName, routingKey, null, messageBytes);
+            }
             return true;
         }
         catch (ChannelClosedException)
         {
-            if (!restartChannelIfFailed) return false;
-            _channel = _connection.CreateModel();
             return false;
         }
     }
 
-    public bool PublishMessage(string exchangeName, string routingKey, byte[] message, bool restartChannelIfFailed = false)
+    public bool PublishMessage(string exchangeName, string routingKey, byte[] message,
+        Dictionary<string, object>? basicPropertiesHeaders = null)
     {
         try
         {
-            _channel.BasicPublish(exchangeName, routingKey, null, message);
+            if (_channel == null) return false;
+            
+            lock (_channel)
+            {
+                IBasicProperties? properties = null;
+
+                if (basicPropertiesHeaders is not null)
+                {
+                    properties = _channel.CreateBasicProperties();
+                    properties.Headers = basicPropertiesHeaders;
+                }
+
+                _channel.BasicPublish(exchangeName, routingKey, properties, message);
+            }
+
             return true;
         }
         catch (ChannelClosedException)
         {
-            if (!restartChannelIfFailed) return false;
-            _channel = _connection.CreateModel();
             return false;
         }
     }

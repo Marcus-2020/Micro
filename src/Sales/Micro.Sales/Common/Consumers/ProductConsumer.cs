@@ -1,6 +1,9 @@
 using System.Text;
+using System.Text.Json;
 using Micro.Core;
 using Micro.Core.Common.Infra.Messaging;
+using Micro.Inventory.Contracts.Products.Events;
+using Micro.Inventory.Products.Contracts.Events;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -8,7 +11,7 @@ using Serilog;
 
 namespace Micro.Sales.Common.Consumers;
 
-public class ProductCreatedConsumerService : IHostedService
+public class ProductConsumer : IHostedService
 {
     private IConnection _connection;
     private IModel _channel;
@@ -16,7 +19,7 @@ public class ProductCreatedConsumerService : IHostedService
     private string? _consumerTag;
     private readonly IServiceProvider _serviceProvider;
 
-    public ProductCreatedConsumerService(IServiceProvider serviceProvider)
+    public ProductConsumer(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
         ConnectionFactory factory = new()
@@ -56,10 +59,26 @@ public class ProductCreatedConsumerService : IHostedService
     {
         var body = args.Body.ToArray();
         string message = Encoding.UTF8.GetString(body);
-        Log.Logger
-            .ForContext<ProductCreatedConsumerService>()
-            .ForContext("message", message)
-            .Information("Message received");
+
+        object? messageType = args.BasicProperties.Headers
+            .FirstOrDefault(x => x.Key == nameof(ProductCreatedEvent.Type)).Value;
+
+        switch (messageType as string)
+        {
+            case EventNames.ProductCreated:
+                var msgObj = JsonSerializer.Deserialize<ProductCreatedEvent>(message);
+                Log.Logger
+                    .ForContext<ProductConsumer>()
+                    .ForContext("message", msgObj, true)
+                    .Information("ProductCreated event received in the Sales module");
+                break;
+            default:
+                Log.Logger
+                    .ForContext<ProductConsumer>()
+                    .ForContext("message", message)
+                    .Information("Message received in the Sales module");
+                break;
+        }
 
         _channel.BasicAck(args.DeliveryTag, false);
         await Task.Yield();
