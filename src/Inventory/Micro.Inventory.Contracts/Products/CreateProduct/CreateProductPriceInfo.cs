@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Micro.Inventory.Products.CreateProduct.ValueObjects;
+namespace Micro.Inventory.Contracts.Products.CreateProduct;
 
 public record struct CreateProductPriceInfo(
     [property: JsonPropertyName("costPrice")]

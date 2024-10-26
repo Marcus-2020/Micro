@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using Micro.Core.Common.Infra.Messaging;
-using Micro.Inventory.Products.Contracts.Events;
+using Micro.Inventory.Contracts.Products.CreateProduct.Events;
 
 namespace Micro.Inventory.Products.Common.Messaging;
 

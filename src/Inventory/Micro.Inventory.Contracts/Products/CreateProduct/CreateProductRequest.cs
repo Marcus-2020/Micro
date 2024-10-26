@@ -1,7 +1,6 @@
 using System.Text.Json.Serialization;
-using Micro.Inventory.Products.CreateProduct.ValueObjects;
 
-namespace Micro.Inventory.Products.CreateProduct.Requests;
+namespace Micro.Inventory.Contracts.Products.CreateProduct;
 
 public record struct CreateProductRequest(
     [property: JsonPropertyName("sku")]

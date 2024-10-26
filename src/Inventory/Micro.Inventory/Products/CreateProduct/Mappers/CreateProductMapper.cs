@@ -1,8 +1,7 @@
+using Micro.Inventory.Contracts.Products.CreateProduct;
 using Micro.Inventory.Products.Common.Entities;
 using Micro.Inventory.Products.Common.Enums;
 using Micro.Inventory.Products.Common.ValueObjects;
-using Micro.Inventory.Products.CreateProduct.Requests;
-using Micro.Inventory.Products.CreateProduct.ValueObjects;
 
 namespace Micro.Inventory.Products.CreateProduct.Mappers;
 

@@ -1,4 +1,4 @@
-﻿namespace Micro.Inventory.Contracts.Products.Events;
+﻿namespace Micro.Inventory.Contracts.Products.CreateProduct.Events;
 
 public static class EventNames
 {

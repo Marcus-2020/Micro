@@ -5,15 +5,14 @@ using Micro.Core.Common.Data;
 using Micro.Core.Common.Extensions;
 using Micro.Core.Common.Infra.Messaging;
 using Micro.Core.Common.Responses;
+using Micro.Inventory.Contracts.Products.CreateProduct;
+using Micro.Inventory.Contracts.Products.CreateProduct.Events;
 using Micro.Inventory.Products.Common.Data;
 using Micro.Inventory.Products.Common.Entities;
 using Micro.Inventory.Products.Common.Messaging;
-using Micro.Inventory.Products.Contracts.Events;
 using Micro.Inventory.Products.CreateProduct.Errors;
 using Micro.Inventory.Products.CreateProduct.Errors.CantAddProduct;
 using Micro.Inventory.Products.CreateProduct.Mappers;
-using Micro.Inventory.Products.CreateProduct.Requests;
-using Micro.Inventory.Products.CreateProduct.Responses;
 using Serilog;
 
 namespace Micro.Inventory.Products.CreateProduct;

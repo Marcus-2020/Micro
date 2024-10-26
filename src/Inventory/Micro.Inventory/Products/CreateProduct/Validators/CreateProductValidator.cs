@@ -1,5 +1,5 @@
 using FluentValidation;
-using Micro.Inventory.Products.CreateProduct.Requests;
+using Micro.Inventory.Contracts.Products.CreateProduct;
 
 namespace Micro.Inventory.Products.CreateProduct.Validators;
 
