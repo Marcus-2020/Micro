@@ -13,15 +13,13 @@ namespace Micro.Sales.Common.Consumers;
 
 public class ProductConsumer : IHostedService
 {
-    private IConnection _connection;
-    private IModel _channel;
-    private AsyncEventingBasicConsumer _consumer;
+    private readonly IConnection _connection;
+    private readonly IModel _channel;
+    private readonly AsyncEventingBasicConsumer _consumer;
     private string? _consumerTag;
-    private readonly IServiceProvider _serviceProvider;
 
-    public ProductConsumer(IServiceProvider serviceProvider)
+    public ProductConsumer()
     {
-        _serviceProvider = serviceProvider;
         ConnectionFactory factory = new()
         {
             Uri = new Uri(Configuration.RabbitMqUri),
