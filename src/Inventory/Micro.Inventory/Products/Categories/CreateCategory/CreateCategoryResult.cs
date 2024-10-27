@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using FluentResults;
 using Micro.Core.Common.Data;
+using Micro.Core.Common.Handlers;
 using Micro.Inventory.Contracts.Products.Categories.CreateCategory;
 using Micro.Inventory.Products.Common.Entities;
 using Serilog;
@@ -11,7 +12,7 @@ internal record struct CreateCategoryResult(
     ILogger Logger,
     IDataContext DataContext,
     CreateCategoryRequest Request,
-    Stopwatch Stopwatch)
+    Stopwatch Stopwatch) : IHandlerResult<CreateCategoryRequest>
 {
     public ProductCategory? Category { get; private set; }
 

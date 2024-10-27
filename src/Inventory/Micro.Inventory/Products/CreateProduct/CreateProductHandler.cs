@@ -3,11 +3,11 @@ using FluentResults;
 using FluentResults.Extensions;
 using FluentValidation;
 using Micro.Core.Common.Data;
+using Micro.Core.Common.Errors;
 using Micro.Core.Common.Extensions;
 using Micro.Core.Common.Handlers;
 using Micro.Core.Common.Infra.Messaging;
 using Micro.Core.Common.Responses;
-using Micro.Inventory.Common.Errors;
 using Micro.Inventory.Contracts.Products.Common.Events;
 using Micro.Inventory.Contracts.Products.CreateProduct;
 using Micro.Inventory.Products.Common.Data;
@@ -19,7 +19,7 @@ namespace Micro.Inventory.Products.CreateProduct;
 
 internal class CreateProductHandler : Handler<CreateProductRequest, Response<CreateProductResponse>>, ICreateProductHandler
 {
-    private readonly IValidator<CreateProductRequest> _validator;
+    protected override IValidator<CreateProductRequest> _validator { get; }
     private readonly IDataContextFactory _dataContextFactory;
     private readonly IProductRepository _productRepository;
     private readonly IProductMessageProducer _messageProducer;
@@ -85,23 +85,6 @@ internal class CreateProductHandler : Handler<CreateProductRequest, Response<Cre
         
         return Result.Fail(new InternalServerError("An error occurred when trying to add the product",
             dcInit.GetFirstException()));
-    }
-    
-    private async Task<Result<CreateProductResult>> ValidateRequestAsync(CreateProductResult result)
-    {
-        var logger = GetMethodLogger(result.Logger, nameof(ValidateRequestAsync));
-        
-        var results = await _validator.ValidateAsync(result.Request);
-        if (results.IsValid) return result;
-        
-        logger.ForContext("validationErrors", results.Errors.Select(x=>new{x.PropertyName, x.ErrorMessage}), true)
-            .Warning("Invalid request at {Timestamp} after {ElapsedMilliseconds}ms", DateTime.UtcNow, result.Stopwatch.ElapsedMilliseconds);
-        
-        return Result.Fail(new BadRequestError(
-            "Invalid request",
-            results.Errors
-                .Select(x => new ResponseError(x.PropertyName, x.ErrorMessage))
-                .ToList()));
     }
     
     private static async Task<Result<CreateProductResult>> MapProductAsync(CreateProductResult result)

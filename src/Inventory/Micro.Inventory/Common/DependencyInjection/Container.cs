@@ -1,13 +1,14 @@
 using FluentValidation;
 using Micro.Inventory.Contracts.Products.Categories.CreateCategory;
+using Micro.Inventory.Contracts.Products.Categories.GetCategories;
 using Micro.Inventory.Contracts.Products.CreateProduct;
 using Micro.Inventory.Products.Categories.Common.Data;
 using Micro.Inventory.Products.Categories.Common.Messaging;
 using Micro.Inventory.Products.Categories.CreateCategory;
+using Micro.Inventory.Products.Categories.GetCategories;
 using Micro.Inventory.Products.Common.Data;
 using Micro.Inventory.Products.Common.Messaging;
 using Micro.Inventory.Products.CreateProduct;
-using Micro.Inventory.Products.CreateProduct.Validators;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Micro.Inventory.Common.DependencyInjection;
@@ -38,5 +39,8 @@ public static class Container
         
         sc.AddScoped<IValidator<CreateCategoryRequest>, CreateCategoryValidator>();
         sc.AddScoped<ICreateCategoryHandler, CreateCategoryHandler>();
+        
+        sc.AddScoped<IValidator<GetCategoriesRequest>, GetCategoriesValidator>();
+        sc.AddScoped<IGetCategoriesHandler, GetCategoriesHandler>();
     }
 }

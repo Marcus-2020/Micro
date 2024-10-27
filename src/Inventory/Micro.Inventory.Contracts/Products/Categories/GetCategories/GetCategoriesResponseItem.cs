@@ -3,5 +3,5 @@
 public record GetCategoriesResponseItem(
     Guid Id,
     string Name,
-    string Descriptions,
+    string Description,
     bool IsActive);

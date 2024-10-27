@@ -1,9 +1,9 @@
 ﻿using FluentResults;
 using Micro.Core.Common.Responses;
 
-namespace Micro.Inventory.Common.Errors;
+namespace Micro.Core.Common.Errors;
 
-public class BadRequestError : IError
+public class ValidationError : IError
 {
     public int StatusCode { get; }
     public string Message { get; }
@@ -12,11 +12,11 @@ public class BadRequestError : IError
     
     public List<ResponseError> ValidationErrors { get; }
     
-    public BadRequestError(string message, List<ResponseError>? errors = null, Dictionary<string, object>? metadata = null, List<IError>? reasons = null)
+    public ValidationError(string message, List<ResponseError> errors, Dictionary<string, object>? metadata = null, List<IError>? reasons = null)
     {
-        StatusCode = 400;
+        StatusCode = 422;
         Message = message;
-        ValidationErrors = errors ?? new();
+        ValidationErrors = errors;
         Metadata = metadata ?? new();
         Reasons = reasons ?? new();
     }

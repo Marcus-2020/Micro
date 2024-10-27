@@ -45,7 +45,7 @@ internal class CategoryRepository : ICategoryRepository
         }
     }
 
-    public async Task<Result<IEnumerable<ProductCategory>>> GetAllAsync(IDataContext dataContext)
+    public async Task<Result<IEnumerable<ProductCategory>>> GetAllAsync(IDataContext dataContext, int skip, int take)
     {
         string sql = 
             """
@@ -53,7 +53,8 @@ internal class CategoryRepository : ICategoryRepository
                    c.created_at AS CreatedAt, c.updated_at AS UpdatedAt, c.deleted_at AS DeletedAt, 
                    c.is_active as IsActive
             FROM inventory.categories c
-            WHERE c.deleted_at IS NULL
+            WHERE c.is_active = @isActive AND c.deleted_at IS NULL
+            LIMIT @take OFFSET @skip
             """;
 
         if (dataContext is { IsConnectionOpen: false } || dataContext.Connection is null)
@@ -64,9 +65,35 @@ internal class CategoryRepository : ICategoryRepository
         try
         {
             var categoriesDto = (await dataContext.Connection
-                .QueryAsync<CategoryDto>(sql, dataContext.Transaction)).ToList();
+                .QueryAsync<CategoryDto>(sql, new {isActive = true, skip, take}, dataContext.Transaction)).ToList();
             
             return Result.Ok(categoriesDto.Select(x => x.ToProductCategory()));
+        }
+        catch (Exception ex)
+        {
+            return Result.Fail(new GetAllCategoriesError(ex));
+        }
+    }
+
+    public async Task<Result<int>> CountAsync(IDataContext dataContext)
+    {
+        string sql = 
+            """
+            SELECT COUNT(c.id)
+            FROM inventory.categories c
+            WHERE c.is_active = @isActive AND c.deleted_at IS NULL
+            """;
+
+        if (dataContext is { IsConnectionOpen: false } || dataContext.Connection is null)
+        {
+            return Result.Fail(DataContextErrors.ConnectionNotOpenOrNull);
+        }
+
+        try
+        {
+            var count = await dataContext.Connection
+                .ExecuteScalarAsync<int>(sql, new {isActive = true}, dataContext.Transaction);
+            return count;
         }
         catch (Exception ex)
         {
@@ -191,7 +218,7 @@ internal class CategoryRepository : ICategoryRepository
                    c.created_at AS CreatedAt, c.updated_at AS UpdatedAt, c.deleted_at AS DeletedAt, 
                    c.is_active as IsActive
             FROM inventory.categories c
-            WHERE c.name = @name AND c.deleted_at IS NULL
+            WHERE c.name = @name AND c.is_active = @isActive AND c.deleted_at IS NULL
             """;
 
         if (dataContext is { IsConnectionOpen: false } || dataContext.Connection is null)
@@ -202,7 +229,7 @@ internal class CategoryRepository : ICategoryRepository
         try
         {
             var categoriesDto = (await dataContext.Connection
-                .QueryAsync<CategoryDto>(sql, new { name }, dataContext.Transaction)).ToList();
+                .QueryAsync<CategoryDto>(sql, new { name, isActive = true }, dataContext.Transaction)).ToList();
             
             return Result.Ok(categoriesDto.Select(x => x.ToProductCategory()));
         }
