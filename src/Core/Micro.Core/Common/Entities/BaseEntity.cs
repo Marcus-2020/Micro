@@ -12,4 +12,30 @@ public abstract class BaseEntity
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
+    
+    public const int CreatedAtNoError = 0;
+    public const int ErrorCreatedAtAlreadySet = 1;
+    public const int ErrorCreatedAtNotInitialized = 2;
+    public const int ErrorCreatedAtAfterCurrentDate = 3;
+
+    public (bool IsSuccess, (int Code, string? Message) Error) SetCreatedAt(DateTime createdAt)
+    {
+        if (CreatedAt > DateTime.MinValue)
+        {
+            return (false, (ErrorCreatedAtAlreadySet, "The date/time of creation is already set"));
+        }
+        
+        if (createdAt == DateTime.MinValue)
+        {
+            return (false, (ErrorCreatedAtNotInitialized, "The date/time of creation needs to be initialized"));
+        }
+
+        if (createdAt > DateTime.UtcNow)
+        {
+            return (false, (ErrorCreatedAtAfterCurrentDate, "The date/time of creation can't be after the current date/time"));
+        }
+
+        CreatedAt = createdAt;
+        return (true, (CreatedAtNoError, null));
+    }
 }

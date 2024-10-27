@@ -5,7 +5,7 @@ namespace Micro.Sales.Sales;
 internal class Customer : SoftDeletableEntity
 {
     public Customer(string name, string email, string document, CustomerAddress address, bool active) 
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
     {
         Name = name;
         Email = email;
@@ -15,7 +15,7 @@ internal class Customer : SoftDeletableEntity
     }
     
     public Customer(Guid id, string name, string email, string document, CustomerAddress address, bool active,
-        DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt, isDeleted)
+        DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt)
     {
         Name = name;
         Email = email;

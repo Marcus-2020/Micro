@@ -6,7 +6,7 @@ namespace Micro.Purchases.Purchases;
 internal class Purchase : SoftDeletableEntity
 {
     public Purchase(int saleNumber, DateTime saleDate, PurchaseStatusEnum status, PriceInfo priceInfo, 
-        List<PurchaseItem>? items = null) : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
+        List<PurchaseItem>? items = null) : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
     {
         PurchaseNumber = saleNumber;
         PurchaseDate = saleDate;
@@ -16,7 +16,7 @@ internal class Purchase : SoftDeletableEntity
     }
     
     public Purchase(Guid id, int saleNumber, DateTime saleDate, PurchaseStatusEnum status, PriceInfo priceInfo, 
-        List<PurchaseItem> items, DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt, isDeleted)
+        List<PurchaseItem> items, DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt)
     {
         PurchaseNumber = saleNumber;
         PurchaseDate = saleDate;

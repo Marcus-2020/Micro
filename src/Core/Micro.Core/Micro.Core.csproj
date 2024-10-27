@@ -17,6 +17,7 @@
       <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
       <PackageReference Include="Npgsql" Version="8.0.5" />
       <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+      <PackageReference Include="Serilog" Version="4.1.0" />
     </ItemGroup>
 
 </Project>

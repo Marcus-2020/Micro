@@ -8,7 +8,7 @@ internal class Product : SoftDeletableEntity
 {
     public Product(Guid id, string sku, string name, string description, ProductTypeEnum productType, 
         ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool active)
-        : base(id, DateTime.MinValue, DateTime.MinValue, false)
+        : base(id, DateTime.MinValue, DateTime.MinValue)
     {
         Sku = sku;
         Name = name;
@@ -23,7 +23,7 @@ internal class Product : SoftDeletableEntity
     public Product(Guid id, string sku, string name, string description, ProductTypeEnum productType, 
         ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool active, bool isDeleted,
         DateTime createdAt, DateTime? updatedAt = null, DateTime? deletedAt = null) 
-        : base(id, createdAt, updatedAt, isDeleted, deletedAt)
+        : base(id, createdAt, updatedAt, deletedAt)
     {
         Sku = sku;
         Name = name;

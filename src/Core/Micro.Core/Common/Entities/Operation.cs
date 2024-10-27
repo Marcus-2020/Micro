@@ -5,7 +5,7 @@ namespace Micro.Core.Common.Entities;
 public class Operation : SoftDeletableEntity
 {
     public Operation(string name, InboudOutboundEnum inboudOutbound, bool active)
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
     {
         Name = name;
         InboudOutbound = inboudOutbound;
@@ -14,7 +14,7 @@ public class Operation : SoftDeletableEntity
     
     public Operation(Guid id, string name, InboudOutboundEnum inboudOutbound, bool active,
         DateTime createdAt, DateTime updatedAt, bool isIsDeleted) 
-        : base(id, createdAt, updatedAt, isIsDeleted)
+        : base(id, createdAt, updatedAt)
     {
         Name = name;
         InboudOutbound = inboudOutbound;

@@ -5,7 +5,7 @@ namespace Micro.Finances.Common.Account;
 internal class Account : SoftDeletableEntity
 {
     public Account(string name, AccountTypeEnum accountType, decimal currentBalance, bool active) 
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
     {
         Name = name;
         AccountType = accountType;
@@ -15,7 +15,7 @@ internal class Account : SoftDeletableEntity
     
     public Account(Guid id, string name, AccountTypeEnum accountType, decimal currentBalance, bool active,
         DateTime createdAt, DateTime updatedAt, bool isIsDeleted) 
-        : base(id, createdAt, updatedAt, isIsDeleted)
+        : base(id, createdAt, updatedAt)
     {
         Name = name;
         AccountType = accountType;

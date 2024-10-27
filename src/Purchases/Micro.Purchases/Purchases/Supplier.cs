@@ -5,7 +5,7 @@ namespace Micro.Purchases.Purchases;
 internal class Supplier : SoftDeletableEntity
 {
     public Supplier(string name, string email, string document, SupplierAddress address) 
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
     {
         Name = name;
         Email = email;
@@ -14,7 +14,7 @@ internal class Supplier : SoftDeletableEntity
     }
     
     public Supplier(Guid id, string name, string email, string document, SupplierAddress address,
-        DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt, isDeleted)
+        DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt)
     {
         Name = name;
         Email = email;

@@ -5,7 +5,7 @@ namespace Micro.Inventory.Common.Storages;
 internal class Storage : SoftDeletableEntity
 {
     public Storage(string name, StorageAddress? address, bool active)
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
     {
         _name = name;
         Address = address;
@@ -14,7 +14,7 @@ internal class Storage : SoftDeletableEntity
 
     public Storage(Guid id, string name, StorageAddress? address, bool active, 
         DateTime createdAt, DateTime updatedAt, bool isDeleted)
-        : base(id, createdAt, updatedAt, isDeleted)
+        : base(id, createdAt, updatedAt)
     {
         _name = name;
         Address = address;

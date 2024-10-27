@@ -45,7 +45,7 @@ internal class CreateProductHandler : ICreateProductHandler
         var watch = Stopwatch.StartNew();
         var logger = _logger.ForContext("method", nameof(HandleAsync));
         
-        logger.Information("Starting product insertion in the inventory module at {Timestamp}", DateTime.UtcNow);
+        logger.Information("Starting inserting a new product at {Timestamp}", DateTime.UtcNow);
 
         await using var dataContext = _dataContextFactory.CreateDataContext();
 
@@ -108,7 +108,7 @@ internal class CreateProductHandler : ICreateProductHandler
 
         var published = _messageProducer.PublishMessage(
             MessagingConstants.ProductCreated.RoutingKey,
-            "ProductCreated",
+            EventNames.ProductCreated,
             new ProductCreatedEvent(product.Id.ToString(), product.Sku, product.Name, product.Description,
                 (int)product.ProductType, product.Category.Id.ToString(), product.Unit.Id.ToString(),
                 product.PriceInfo.CostPrice, product.PriceInfo.ProfitMargin, product.PriceInfo.SellingPrice,
@@ -123,11 +123,11 @@ internal class CreateProductHandler : ICreateProductHandler
                 DateTime.UtcNow, product.Id);
 
         return Response<CreateProductResponse>
-            .Created(new(addProduct.Value.Id.ToString(), addProduct.Value.Active, addProduct.Value.CreateAt),
+            .Created(new(addProduct.Value.Id.ToString(), addProduct.Value.Active, addProduct.Value.CreatedAt),
                 "The product was created successfully");
     }
 
-    private async Task<Result<(Guid Id, bool Active, DateTime CreateAt)>> AddProductAsync(IDataContext dataContext, Product product)
+    private async Task<Result<(Guid Id, bool Active, DateTime CreatedAt)>> AddProductAsync(IDataContext dataContext, Product product)
     {
         var addProduct = await _productRepository.AddAsync(dataContext, product);
         if (addProduct.IsFailed)

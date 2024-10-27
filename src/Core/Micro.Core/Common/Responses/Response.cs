@@ -113,7 +113,7 @@ public class Response<T>
         return new((int)HttpStatusCode.UnprocessableEntity, message, default, errors);
     }
     
-    public static Response<T> InternalServerError(string message, ResponseError[]? errors)
+    public static Response<T> InternalServerError(string message, ResponseError[]? errors = null)
     {
         return new((int)HttpStatusCode.InternalServerError, message, default, errors);
     }

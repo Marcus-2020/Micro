@@ -11,5 +11,5 @@ internal interface ICategoryRepository
     Task<Result<(Guid Id, DateTime CreatedAt)>> AddAsync(IDataContext dataContext, ProductCategory category);
     Task<Result> UpdateAsync(IDataContext dataContext, ProductCategory category);
     Task<Result> DeleteAsync(IDataContext dataContext, Guid categoryId);
-    Task<Result<IEnumerable<ProductCategory>>> GetByName(IDataContext dataContext, string name);
+    Task<Result<IEnumerable<ProductCategory>>> GetByNameAsync(IDataContext dataContext, string name);
 }

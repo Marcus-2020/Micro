@@ -7,13 +7,13 @@ internal class Movement : SoftDeletableEntity
 {
     public Movement(Guid accountId, string description, InboudOutboundEnum inboudOutbound,
         MovementTypeEnum movementType, decimal value) 
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
     {
     }
     
     public Movement(Guid id, Guid accountId, string description, InboudOutboundEnum inboudOutbound,
         MovementTypeEnum movementType, decimal value, DateTime createdAt, DateTime updatedAt, bool isIsDeleted) 
-        : base(id, createdAt, updatedAt, isIsDeleted)
+        : base(id, createdAt, updatedAt)
     {
     }
 

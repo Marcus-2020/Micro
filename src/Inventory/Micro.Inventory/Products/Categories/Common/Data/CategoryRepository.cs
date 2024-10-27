@@ -183,7 +183,7 @@ internal class CategoryRepository : ICategoryRepository
         }
     }
 
-    public async Task<Result<IEnumerable<ProductCategory>>> GetByName(IDataContext dataContext, string name)
+    public async Task<Result<IEnumerable<ProductCategory>>> GetByNameAsync(IDataContext dataContext, string name)
     {
         string sql = 
             """

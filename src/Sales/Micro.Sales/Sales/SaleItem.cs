@@ -6,7 +6,7 @@ namespace Micro.Sales.Sales;
 internal class SaleItem : SoftDeletableEntity
 {
     public SaleItem(Guid productId, string description, PriceInfo priceInfo) 
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
     {
         ProductId = productId;
         Description = description;
@@ -14,7 +14,7 @@ internal class SaleItem : SoftDeletableEntity
     }
     
     public SaleItem(Guid id, Guid productId, string description, PriceInfo priceInfo,
-        DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt, isDeleted)
+        DateTime createdAt, DateTime updatedAt, bool isDeleted) : base(id, createdAt, updatedAt)
     {
         ProductId = productId;
         Description = description;

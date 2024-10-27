@@ -6,7 +6,7 @@ internal class Receivable : SoftDeletableEntity
 {
     public Receivable(Guid accountId, Guid operationId, Guid beneficiaryId, string description, DateTime dueDate,
         DateTime paidDate, decimal totalValue, decimal valuePaid)
-        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue, false)
+        : base(Guid.Empty, DateTime.MinValue, DateTime.MinValue)
     {
         AccountId = accountId;
         OperationId = operationId;
@@ -20,7 +20,7 @@ internal class Receivable : SoftDeletableEntity
     
     public Receivable(Guid id, Guid accountId, Guid operationId, Guid beneficiaryId, string description, DateTime dueDate,
         DateTime paidDate, decimal totalValue, decimal valuePaid, DateTime createdAt, DateTime updatedAt, bool isIsDeleted)
-        : base(id, createdAt, updatedAt, isIsDeleted)
+        : base(id, createdAt, updatedAt)
     {
         AccountId = accountId;
         OperationId = operationId;
