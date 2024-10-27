@@ -13,8 +13,6 @@ using Micro.Inventory.Contracts.Products.CreateProduct;
 using Micro.Inventory.Products.Common.Data;
 using Micro.Inventory.Products.Common.Entities;
 using Micro.Inventory.Products.Common.Messaging;
-using Micro.Inventory.Products.CreateProduct.Errors;
-using Micro.Inventory.Products.CreateProduct.Errors.CantAddProduct;
 using Serilog;
 
 namespace Micro.Inventory.Products.CreateProduct;
