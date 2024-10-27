@@ -7,7 +7,7 @@ namespace Micro.Inventory.Products.Common.Entities;
 internal class Product : SoftDeletableEntity
 {
     public Product(Guid id, string sku, string name, string description, ProductTypeEnum productType, 
-        ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool active)
+        ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool isActive)
         : base(id, DateTime.MinValue, DateTime.MinValue)
     {
         Sku = sku;
@@ -17,11 +17,11 @@ internal class Product : SoftDeletableEntity
         Category = category;
         Unit = unit;
         PriceInfo = priceInfo;
-        Active = active;
+        IsActive = isActive;
     }
     
     public Product(Guid id, string sku, string name, string description, ProductTypeEnum productType, 
-        ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool active, bool isDeleted,
+        ProductCategory category, ProductUnit unit, ProductPriceInfo priceInfo, bool isActive, bool isDeleted,
         DateTime createdAt, DateTime? updatedAt = null, DateTime? deletedAt = null) 
         : base(id, createdAt, updatedAt, deletedAt)
     {
@@ -32,7 +32,7 @@ internal class Product : SoftDeletableEntity
         Category = category;
         Unit = unit;
         PriceInfo = priceInfo;
-        Active = active;
+        IsActive = isActive;
     }
 
     private string _sku;
@@ -72,7 +72,7 @@ internal class Product : SoftDeletableEntity
         private set => _unit = value ?? new();
     }
 
-    public bool Active { get; set; }
+    public bool IsActive { get; set; }
 
     public ProductPriceInfo PriceInfo { get; private set; }
 }

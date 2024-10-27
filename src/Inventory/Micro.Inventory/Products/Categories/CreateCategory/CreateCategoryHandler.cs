@@ -87,7 +87,7 @@ internal class CreateCategoryHandler : Handler<CreateCategoryRequest, Response<C
             "An error occurred while trying to start the connection with the database {Timestamp} after {ElapsedMilliseconds}ms", 
             DateTime.UtcNow, result.Stopwatch.ElapsedMilliseconds);
         
-        return Result.Fail(new InternalServerError("An error occurred when trying to add the product",
+        return Result.Fail(new InternalServerError("An error occurred when trying to add the product category",
             dcInit.GetFirstException()));
     }
 
@@ -101,7 +101,7 @@ internal class CreateCategoryHandler : Handler<CreateCategoryRequest, Response<C
         logger.ForContext("validationErrors", results.Errors.Select(x=>new{x.PropertyName, x.ErrorMessage}), true)
             .Warning("Invalid request at {Timestamp} after {ElapsedMilliseconds}ms", DateTime.UtcNow, result.Stopwatch.ElapsedMilliseconds);
         
-        return Result.Fail(new ValidationError(
+        return Result.Fail(new BadRequestError(
             "Invalid request",
             results.Errors
                 .Select(x => new ResponseError(x.PropertyName, x.ErrorMessage))
