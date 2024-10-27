@@ -1,7 +1,7 @@
 using FluentValidation;
 using Micro.Inventory.Contracts.Products.CreateProduct;
 
-namespace Micro.Inventory.Products.CreateProduct.Validators;
+namespace Micro.Inventory.Products.CreateProduct;
 
 internal class CreateProductValidator : AbstractValidator<CreateProductRequest>
 {

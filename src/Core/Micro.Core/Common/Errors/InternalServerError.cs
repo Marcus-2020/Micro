@@ -1,6 +1,6 @@
 ﻿using FluentResults;
 
-namespace Micro.Inventory.Common.Errors;
+namespace Micro.Core.Common.Errors;
 
 public class InternalServerError : IError
 {

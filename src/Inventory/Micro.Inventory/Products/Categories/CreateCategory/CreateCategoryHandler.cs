@@ -3,11 +3,11 @@ using FluentResults;
 using FluentResults.Extensions;
 using FluentValidation;
 using Micro.Core.Common.Data;
+using Micro.Core.Common.Errors;
 using Micro.Core.Common.Extensions;
 using Micro.Core.Common.Handlers;
 using Micro.Core.Common.Infra.Messaging;
 using Micro.Core.Common.Responses;
-using Micro.Inventory.Common.Errors;
 using Micro.Inventory.Contracts.Products.Categories.Common.Events;
 using Micro.Inventory.Contracts.Products.Categories.CreateCategory;
 using Micro.Inventory.Products.Categories.Common.Data;
@@ -21,7 +21,7 @@ internal class CreateCategoryHandler : Handler<CreateCategoryRequest, Response<C
 {
     #region Constructor and Properties
 
-    private readonly IValidator<CreateCategoryRequest> _validator;
+    protected override IValidator<CreateCategoryRequest> _validator { get; }
     private readonly IDataContextFactory _dataContextFactory;
     private readonly ICategoryRepository _categoryRepository;
     private readonly ICategoryMessageProducer _messagingProducer;
@@ -89,23 +89,6 @@ internal class CreateCategoryHandler : Handler<CreateCategoryRequest, Response<C
         
         return Result.Fail(new InternalServerError("An error occurred when trying to add the product category",
             dcInit.GetFirstException()));
-    }
-
-    private async Task<Result<CreateCategoryResult>> ValidateRequestAsync(CreateCategoryResult result)
-    {
-        var logger = GetMethodLogger(result.Logger, nameof(ValidateRequestAsync));
-        
-        var results = await _validator.ValidateAsync(result.Request);
-        if (results.IsValid) return result;
-        
-        logger.ForContext("validationErrors", results.Errors.Select(x=>new{x.PropertyName, x.ErrorMessage}), true)
-            .Warning("Invalid request at {Timestamp} after {ElapsedMilliseconds}ms", DateTime.UtcNow, result.Stopwatch.ElapsedMilliseconds);
-        
-        return Result.Fail(new BadRequestError(
-            "Invalid request",
-            results.Errors
-                .Select(x => new ResponseError(x.PropertyName, x.ErrorMessage))
-                .ToList()));
     }
 
     private static async Task<Result<CreateCategoryResult>> MapCategoryAsync(CreateCategoryResult result)

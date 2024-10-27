@@ -3,7 +3,7 @@ using Micro.Inventory.Products.Common.Entities;
 using Micro.Inventory.Products.Common.Enums;
 using Micro.Inventory.Products.Common.ValueObjects;
 
-namespace Micro.Inventory.Products.CreateProduct.Mappers;
+namespace Micro.Inventory.Products.CreateProduct;
 
 internal static class CreateProductMapper
 {

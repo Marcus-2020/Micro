@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Micro.Api.Inventory.Products.Categories.GetCategories;
 using Micro.Api.Inventory.Products.CreateProduct;
 using Micro.Core.Telemetry;
 using Microsoft.AspNetCore.Mvc;
@@ -36,9 +37,7 @@ public static class Endpoint
                 return new {message = context.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Email).Value};
             }).RequireAuthorization();
 
-        endpoints.MapGroup("v1/inventory")
-            .WithTags("Inventory")
-            .MapEndpoint<CreateProductEndpoint>();
+        MapInventoryModuleEndpoints(endpoints);
             
         endpoints.MapGroup("v1/finances")
             .WithTags("Finances");
@@ -48,6 +47,21 @@ public static class Endpoint
         
         endpoints.MapGroup("v1/purchases")
             .WithTags("Purchases");
+    }
+
+    private static void MapInventoryModuleEndpoints(RouteGroupBuilder endpoints)
+    {
+        var inventoryGroup = endpoints.MapGroup("v1/inventory")
+            .WithTags("Inventory");
+
+        var invProdGroup = inventoryGroup.MapGroup("products")
+            .WithTags("Products");
+        
+        invProdGroup.MapEndpoint<CreateProductEndpoint>();
+        
+        invProdGroup.MapGroup("categories")
+            .WithTags("Product Categories")
+            .MapEndpoint<GetCategoriesEndpoint>();
     }
 
     public static IEndpointRouteBuilder MapEndpoint<TEndpoint>(this IEndpointRouteBuilder app) 
