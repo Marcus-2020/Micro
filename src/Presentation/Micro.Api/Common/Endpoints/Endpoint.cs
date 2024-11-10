@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using Micro.Api.Inventory.Products.Categories.CreateCategoryEndpoint;
 using Micro.Api.Inventory.Products.Categories.GetCategories;
 using Micro.Api.Inventory.Products.CreateProduct;
 using Micro.Core.Telemetry;
@@ -61,6 +62,7 @@ public static class Endpoint
         
         invProdGroup.MapGroup("categories")
             .WithTags("Product Categories")
+            .MapEndpoint<CreateCategoryEndpoint>()
             .MapEndpoint<GetCategoriesEndpoint>();
     }
 
