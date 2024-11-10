@@ -1,0 +1,15 @@
+﻿### POST request to create a new category
+POST https://localhost:44393/v1/inventory/products/categories
+Authorization: Bearer
+Content-Type: application/json
+
+{
+  "name": "Toilet paper",
+  "description": "Toilet paper category",
+  "isActive": true
+}
+
+### GET request to get all categories
+GET https://localhost:44393/v1/inventory/products/categories?skip=0&take=10
+Authorization: Bearer 
+Content-Type: application/json
