@@ -1,3 +1,4 @@
+using FluentResults;
 using Micro.Core.Common.Entities;
 using Micro.Inventory.Products.Common.Enums;
 using Micro.Inventory.Products.Common.ValueObjects;

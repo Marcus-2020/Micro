@@ -4,7 +4,7 @@ using Micro.Inventory.Products.Common.ValueObjects;
 
 namespace Micro.Inventory.Products.Common.DTOs;
 
-internal record ProductDto(
+public record ProductDto(
     Guid Id,
     string Sku,
     string Name,
@@ -22,19 +22,15 @@ internal record ProductDto(
     DateTime? DeletedAt,
     bool IsActive)
 {
-    public bool IsDeleted => DeletedAt is not null;
-
-    public Product ToProduct()
+    public Guid Id
     {
-        return new Product(
-            Id,
-            Sku,
-            Name,
-            Description,
-            ProductType,
-            new ProductCategory(CategoryId, CategoryName),
-            new ProductUnit(UnitId, UnitName),
-            new ProductPriceInfo(CostPrice, ProfitMargin, SellingPrice),
-            IsActive, IsDeleted, CreatedAt, UpdatedAt, DeletedAt);
+        get => Id;
+        set
+        {
+            if (Id != Guid.Empty) throw new ArgumentException("Id is already set");
+            Id = value;
+        } 
     }
+    
+    public bool IsDeleted => DeletedAt is not null;
 }

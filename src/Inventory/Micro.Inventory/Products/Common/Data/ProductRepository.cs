@@ -9,7 +9,7 @@ namespace Micro.Inventory.Products.Common.Data;
 
 internal class ProductRepository : IProductRepository
 {
-    public async Task<Result<Product>> GetByIdAsync(IDataContext dataContext, Guid productId)
+    public async Task<Result<ProductDto>> GetByIdAsync(IDataContext dataContext, Guid productId)
     {
         var sql = 
             """
@@ -42,7 +42,7 @@ internal class ProductRepository : IProductRepository
                     .Fail(new Error("Product not found")
                     .WithMetadata("PRODUCT_NOT_FOUND", string.Empty));
             
-            return Result.Ok(productDto.ToProduct());
+            return Result.Ok(productDto);
         }
         catch (Exception ex)
         {
@@ -50,7 +50,7 @@ internal class ProductRepository : IProductRepository
         }
     }
 
-    public async Task<Result<IEnumerable<Product>>> GetAllAsync(IDataContext dataContext)
+    public async Task<Result<IEnumerable<ProductDto>>> GetAllAsync(IDataContext dataContext)
     {
         var sql = 
             """
@@ -77,7 +77,7 @@ internal class ProductRepository : IProductRepository
                     sql,
                     transaction: dataContext.Transaction)).ToList();
             
-            return Result.Ok(productDtos.Select(x => x.ToProduct()));
+            return Result.Ok(productDtos.Select(x => x));
         }
         catch (Exception ex)
         {
@@ -85,7 +85,7 @@ internal class ProductRepository : IProductRepository
         }
     }
 
-    public async Task<Result<(Guid Id, DateTime CreatedAt)>> AddAsync(IDataContext dataContext, Product product)
+    public async Task<Result<(Guid Id, DateTime CreatedAt)>> AddAsync(IDataContext dataContext, ProductDto product)
     {
         var sql = 
             """
@@ -100,28 +100,29 @@ internal class ProductRepository : IProductRepository
         
         try
         {
+            var id = Guid.NewGuid();
             var createdAt = DateTime.UtcNow;
             
             await dataContext.Connection.ExecuteAsync(
                 sql,
                 new
                 {
-                    id = product.Id,
+                    id,
                     sku = product.Sku,
                     name = product.Name,
                     description = product.Description,
                     productType = (int)product.ProductType,
-                    categoryId = product.Category.Id,
-                    unitId = product.Unit.Id,
-                    costPrice = product.PriceInfo.CostPrice,
-                    profitMargin = product.PriceInfo.ProfitMargin,
-                    sellingPrice = product.PriceInfo.SellingPrice,
+                    categoryId = product.CategoryId,
+                    unitId = product.UnitId,
+                    costPrice = product.CostPrice,
+                    profitMargin = product.ProfitMargin,
+                    sellingPrice = product.SellingPrice,
                     createdAt,
                     isActive = true,
                 },
                 dataContext.Transaction);
 
-            return (product.Id, createdAt);
+            return (id, createdAt);
         }
         catch (Exception ex)
         {
@@ -129,7 +130,7 @@ internal class ProductRepository : IProductRepository
         }
     }
 
-    public async Task<Result> UpdateAsync(IDataContext dataContext, Product product)
+    public async Task<Result> UpdateAsync(IDataContext dataContext, ProductDto product)
     {
         var sql = 
             """
@@ -164,11 +165,11 @@ internal class ProductRepository : IProductRepository
                     name = product.Name,
                     description = product.Description,
                     productType = (int)product.ProductType,
-                    categoryId = product.Category.Id,
-                    unitId = product.Unit.Id,
-                    costPrice = product.PriceInfo.CostPrice,
-                    profitMargin = product.PriceInfo.ProfitMargin,
-                    sellingPrice = product.PriceInfo.SellingPrice,
+                    categoryId = product.CategoryId,
+                    unitId = product.UnitId,
+                    costPrice = product.CostPrice,
+                    profitMargin = product.ProfitMargin,
+                    sellingPrice = product.SellingPrice,
                     updatedAt = DateTime.UtcNow,
                 },
                 dataContext.Transaction);
@@ -215,7 +216,7 @@ internal class ProductRepository : IProductRepository
         }
     }
 
-    public async Task<Result<IEnumerable<Product>>> GetByNameOrSku(IDataContext dataContext, string sku, string name)
+    public async Task<Result<IEnumerable<ProductDto>>> GetByNameOrSku(IDataContext dataContext, string sku, string name)
     {
         var sql = 
             """
@@ -243,7 +244,7 @@ internal class ProductRepository : IProductRepository
                     new {sku, name},
                     transaction: dataContext.Transaction)).ToList();
             
-            return Result.Ok(productDtos.Select(x => x.ToProduct()));
+            return Result.Ok(productDtos.Select(x => x));
         }
         catch (Exception ex)
         {

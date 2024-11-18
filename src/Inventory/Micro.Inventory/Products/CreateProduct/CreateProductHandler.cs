@@ -12,12 +12,13 @@ using Micro.Inventory.Contracts.Products.Common.Events;
 using Micro.Inventory.Contracts.Products.CreateProduct;
 using Micro.Inventory.Products.Common.Data;
 using Micro.Inventory.Products.Common.Entities;
+using Micro.Inventory.Products.Common.Extensions;
 using Micro.Inventory.Products.Common.Messaging;
 using Serilog;
 
 namespace Micro.Inventory.Products.CreateProduct;
 
-internal class CreateProductHandler : Handler<CreateProductRequest, Response<CreateProductResponse>>, ICreateProductHandler
+public class CreateProductHandler : Handler<CreateProductRequest, Response<CreateProductResponse>>, ICreateProductHandler
 {
     protected override IValidator<CreateProductRequest> _validator { get; }
     private readonly IDataContextFactory _dataContextFactory;
@@ -68,7 +69,7 @@ internal class CreateProductHandler : Handler<CreateProductRequest, Response<Cre
 
         return Response<CreateProductResponse>
             .Created(new(product!.Id.ToString(), product.IsActive, product.CreatedAt),
-                "The product was created successfully");
+                "Product created successfully");
     }
     
     private static async Task<Result<CreateProductResult>> InitializeTransactionAsync(CreateProductResult result)
@@ -139,7 +140,7 @@ internal class CreateProductHandler : Handler<CreateProductRequest, Response<Cre
     {
         var logger = GetMethodLogger(result.Logger, nameof(AddProductAsync));
         
-        var addResult = await _productRepository.AddAsync(result.DataContext, result.Product!);
+        var addResult = await _productRepository.AddAsync(result.DataContext, result.Product!.ToProductDto());
         if (addResult.IsFailed)
         {
             logger.Error(addResult.GetFirstException(),
@@ -149,7 +150,20 @@ internal class CreateProductHandler : Handler<CreateProductRequest, Response<Cre
                 "An error occurred when trying to add the product to the database",
                 addResult.GetFirstException()));
         }
+        
+        var setProductId = result.Product!.SetId(addResult.Value.Id);
+        if (!setProductId.IsSuccess)
+        {
+            logger.ForContext("ErrorCode", setProductId.Error.Code)
+                .ForContext("ErrorMessage", setProductId.Error.Message)
+                .Error("An error occurred while trying to set up the product id after database insertion at {Timestamp} after {ElapsedMilliseconds}ms",
+                    DateTime.UtcNow, result.Stopwatch.ElapsedMilliseconds);
+            return Result.Fail(new InternalServerError(
+                "An error occurred when trying to add the product to the database",
+                null));
+        }
 
+        
         var setCreatedAt = result.Product!.SetCreatedAt(addResult.Value.CreatedAt);
         if (!setCreatedAt.IsSuccess)
         {

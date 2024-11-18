@@ -12,12 +12,27 @@ public abstract class BaseEntity
         CreatedAt = createdAt;
         UpdatedAt = updatedAt;
     }
+
+    public const int IdNoError = 0;
+    public const int ErrorIdAlreadySet = 1;
+    
+    public (bool IsSuccess, (int Code, string? Message) Error) SetId(Guid id)
+    {
+        if (Id != Guid.Empty)
+        {
+            return (false, (ErrorIdAlreadySet, "Id is already set"));
+        }
+        
+        Id = id;
+        return (true, (IdNoError, null));
+    }
+    
     
     public const int CreatedAtNoError = 0;
     public const int ErrorCreatedAtAlreadySet = 1;
     public const int ErrorCreatedAtNotInitialized = 2;
     public const int ErrorCreatedAtAfterCurrentDate = 3;
-
+        
     public (bool IsSuccess, (int Code, string? Message) Error) SetCreatedAt(DateTime createdAt)
     {
         if (CreatedAt > DateTime.MinValue)

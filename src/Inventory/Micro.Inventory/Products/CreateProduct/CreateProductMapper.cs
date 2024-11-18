@@ -10,7 +10,7 @@ internal static class CreateProductMapper
     internal static Product ToProduct(this CreateProductRequest request)
     {
         return new Product(
-            Guid.NewGuid(),
+            Guid.Empty,
             request.Sku,
             request.Name,
             request.Description,
