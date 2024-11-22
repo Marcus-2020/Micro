@@ -11,8 +11,8 @@ using Micro.Core.Common.Responses;
 using Micro.Inventory.Contracts.Products.Categories.Common.Events;
 using Micro.Inventory.Contracts.Products.Categories.CreateCategory;
 using Micro.Inventory.Products.Categories.Common.Data;
+using Micro.Inventory.Products.Categories.Common.Extensions;
 using Micro.Inventory.Products.Categories.Common.Messaging;
-using Micro.Inventory.Products.Categories.Extensions;
 using Micro.Inventory.Products.Common.Entities;
 using Serilog;
 

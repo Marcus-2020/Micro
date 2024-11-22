@@ -1,7 +1,7 @@
 ﻿using Micro.Inventory.Products.Categories.Common.DTOs;
 using Micro.Inventory.Products.Common.Entities;
 
-namespace Micro.Inventory.Products.Categories.Extensions;
+namespace Micro.Inventory.Products.Categories.Common.Extensions;
 
 internal static class CategoryExtensions
 {

@@ -9,7 +9,7 @@ using Micro.Core.Common.Handlers;
 using Micro.Core.Common.Responses;
 using Micro.Inventory.Contracts.Products.Categories.GetCategories;
 using Micro.Inventory.Products.Categories.Common.Data;
-using Micro.Inventory.Products.Categories.Extensions;
+using Micro.Inventory.Products.Categories.Common.Extensions;
 using Serilog;
 
 namespace Micro.Inventory.Products.Categories.GetCategories;
