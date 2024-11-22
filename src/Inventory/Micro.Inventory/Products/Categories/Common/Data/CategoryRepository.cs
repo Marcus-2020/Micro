@@ -9,7 +9,7 @@ namespace Micro.Inventory.Products.Categories.Common.Data;
 
 internal class CategoryRepository : ICategoryRepository
 {
-    public async Task<Result<ProductCategory>> GetByIdAsync(IDataContext dataContext, Guid categoryId)
+    public async Task<Result<CategoryDto>> GetByIdAsync(IDataContext dataContext, Guid categoryId)
     {
         string sql = 
             """
@@ -37,7 +37,7 @@ internal class CategoryRepository : ICategoryRepository
                     .Fail(new Error("Category not found")
                         .WithMetadata("CATEGORY_NOT_FOUND", string.Empty));
             
-            return Result.Ok(categoryDto.ToProductCategory());
+            return Result.Ok(categoryDto);
         }
         catch (Exception ex)
         {
@@ -45,7 +45,7 @@ internal class CategoryRepository : ICategoryRepository
         }
     }
 
-    public async Task<Result<IEnumerable<ProductCategory>>> GetAllAsync(IDataContext dataContext, int skip, int take)
+    public async Task<Result<List<CategoryDto>>> GetAllAsync(IDataContext dataContext, int skip, int take)
     {
         string sql = 
             """
@@ -67,7 +67,7 @@ internal class CategoryRepository : ICategoryRepository
             var categoriesDto = (await dataContext.Connection
                 .QueryAsync<CategoryDto>(sql, new {isActive = true, skip, take}, dataContext.Transaction)).ToList();
             
-            return Result.Ok(categoriesDto.Select(x => x.ToProductCategory()));
+            return Result.Ok(categoriesDto);
         }
         catch (Exception ex)
         {
@@ -101,7 +101,7 @@ internal class CategoryRepository : ICategoryRepository
         }
     }
 
-    public async Task<Result<(Guid Id, DateTime CreatedAt)>> AddAsync(IDataContext dataContext, ProductCategory category)
+    public async Task<Result<(Guid Id, DateTime CreatedAt)>> AddAsync(IDataContext dataContext, CategoryDto category)
     {
         var sql = 
             """
@@ -116,13 +116,14 @@ internal class CategoryRepository : ICategoryRepository
         
         try
         {
+            var id = Guid.NewGuid();
             var createdAt = DateTime.UtcNow;
             
             await dataContext.Connection.ExecuteAsync(
                 sql,
                 new
                 {
-                    id = category.Id,
+                    id,
                     name = category.Name,
                     description = category.Description,
                     createdAt,
@@ -130,7 +131,7 @@ internal class CategoryRepository : ICategoryRepository
                 },
                 dataContext.Transaction);
 
-            return (category.Id, createdAt);
+            return (id, createdAt);
         }
         catch (Exception ex)
         {
@@ -138,7 +139,7 @@ internal class CategoryRepository : ICategoryRepository
         }
     }
 
-    public async Task<Result> UpdateAsync(IDataContext dataContext, ProductCategory category)
+    public async Task<Result> UpdateAsync(IDataContext dataContext, CategoryDto category)
     {
         var sql = 
             """
@@ -210,7 +211,7 @@ internal class CategoryRepository : ICategoryRepository
         }
     }
 
-    public async Task<Result<IEnumerable<ProductCategory>>> GetByNameAsync(IDataContext dataContext, string name)
+    public async Task<Result<List<CategoryDto>>> GetByNameAsync(IDataContext dataContext, string name)
     {
         string sql = 
             """
@@ -231,7 +232,7 @@ internal class CategoryRepository : ICategoryRepository
             var categoriesDto = (await dataContext.Connection
                 .QueryAsync<CategoryDto>(sql, new { name, isActive = true }, dataContext.Transaction)).ToList();
             
-            return Result.Ok(categoriesDto.Select(x => x.ToProductCategory()));
+            return Result.Ok(categoriesDto);
         }
         catch (Exception ex)
         {

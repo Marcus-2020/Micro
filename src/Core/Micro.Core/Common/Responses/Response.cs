@@ -105,7 +105,7 @@ public class Response<T>
     
     public static Response<T> BadRequest(string message, ResponseError[]? errors)
     {
-        return new((int)HttpStatusCode.Accepted, message, default, errors);
+        return new((int)HttpStatusCode.BadRequest, message, default, errors);
     }
     
     public static Response<T> UnprocessableEntity(string message, ResponseError[]? errors)

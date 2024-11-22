@@ -3,7 +3,7 @@ using Micro.Inventory.Contracts.Products.Categories.CreateCategory;
 
 namespace Micro.Inventory.Products.Categories.CreateCategory;
 
-internal class CreateCategoryValidator  : AbstractValidator<CreateCategoryRequest>
+public class CreateCategoryValidator  : AbstractValidator<CreateCategoryRequest>
 {
     public CreateCategoryValidator()
     {

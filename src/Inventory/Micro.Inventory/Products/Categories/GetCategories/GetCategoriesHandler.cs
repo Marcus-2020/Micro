@@ -9,11 +9,12 @@ using Micro.Core.Common.Handlers;
 using Micro.Core.Common.Responses;
 using Micro.Inventory.Contracts.Products.Categories.GetCategories;
 using Micro.Inventory.Products.Categories.Common.Data;
+using Micro.Inventory.Products.Categories.Extensions;
 using Serilog;
 
 namespace Micro.Inventory.Products.Categories.GetCategories;
 
-internal class GetCategoriesHandler : Handler<GetCategoriesRequest, Response<GetCategoriesResponse>>, IGetCategoriesHandler
+public class GetCategoriesHandler : Handler<GetCategoriesRequest, Response<GetCategoriesResponse>>, IGetCategoriesHandler
 {
     protected override IValidator<GetCategoriesRequest> _validator { get; }
     private readonly IDataContextFactory _dataContextFactory;
@@ -109,7 +110,7 @@ internal class GetCategoriesHandler : Handler<GetCategoriesRequest, Response<Get
                 getAllResult.GetFirstException()));
         }
 
-        result.Categories = getAllResult.Value.ToList();
+        result.Categories = getAllResult.Value.Select(x => x.ToProductCategory()).ToList();
         return result;
     }
     
@@ -119,10 +120,10 @@ internal class GetCategoriesHandler : Handler<GetCategoriesRequest, Response<Get
         
         Response<GetCategoriesResponse> response;
         
-        if (result.HasError<InternalServerError>())
+        if (result.HasError<BadRequestError>())
         {
-            var error = result.Errors.First(x => x is InternalServerError);
-            response = Response<GetCategoriesResponse>.InternalServerError(error.Message);
+            var error = result.Errors.First(x => x is BadRequestError) as BadRequestError;
+            response = Response<GetCategoriesResponse>.BadRequest(error!.Message, error.ValidationErrors.ToArray());
         }
         else if (result.HasError<ValidationError>())
         {

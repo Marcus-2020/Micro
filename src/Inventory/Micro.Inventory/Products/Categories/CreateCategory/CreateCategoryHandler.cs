@@ -12,12 +12,13 @@ using Micro.Inventory.Contracts.Products.Categories.Common.Events;
 using Micro.Inventory.Contracts.Products.Categories.CreateCategory;
 using Micro.Inventory.Products.Categories.Common.Data;
 using Micro.Inventory.Products.Categories.Common.Messaging;
+using Micro.Inventory.Products.Categories.Extensions;
 using Micro.Inventory.Products.Common.Entities;
 using Serilog;
 
 namespace Micro.Inventory.Products.Categories.CreateCategory;
 
-internal class CreateCategoryHandler : Handler<CreateCategoryRequest, Response<CreateCategoryResponse>>, ICreateCategoryHandler
+public class CreateCategoryHandler : Handler<CreateCategoryRequest, Response<CreateCategoryResponse>>, ICreateCategoryHandler
 {
     #region Constructor and Properties
 
@@ -72,7 +73,7 @@ internal class CreateCategoryHandler : Handler<CreateCategoryRequest, Response<C
 
         return Response<CreateCategoryResponse>
             .Created(new(category!.Id.ToString(), category.IsActive, category.CreatedAt),
-                "The product category was created successfully");
+                "Category created successfully");
     }
 
     private static async Task<Result<CreateCategoryResult>> InitializeTransactionAsync(CreateCategoryResult result)
@@ -132,7 +133,7 @@ internal class CreateCategoryHandler : Handler<CreateCategoryRequest, Response<C
     {
         var logger = GetMethodLogger(result.Logger, nameof(AddCategoryAsync));
         
-        var addResult = await _categoryRepository.AddAsync(result.DataContext, result.Category!);
+        var addResult = await _categoryRepository.AddAsync(result.DataContext, result.Category!.ToCategoryDto());
         if (addResult.IsFailed)
         {
             logger.Error(addResult.GetFirstException(),
@@ -141,6 +142,18 @@ internal class CreateCategoryHandler : Handler<CreateCategoryRequest, Response<C
             return Result.Fail(new InternalServerError(
                 "An error occurred when trying to add the category to the database",
                 addResult.GetFirstException()));
+        }
+        
+        var setProductId = result.Category!.SetId(addResult.Value.Id);
+        if (!setProductId.IsSuccess)
+        {
+            logger.ForContext("ErrorCode", setProductId.Error.Code)
+                .ForContext("ErrorMessage", setProductId.Error.Message)
+                .Error("An error occurred while trying to set up the category id after database insertion at {Timestamp} after {ElapsedMilliseconds}ms",
+                    DateTime.UtcNow, result.Stopwatch.ElapsedMilliseconds);
+            return Result.Fail(new InternalServerError(
+                "An error occurred when trying to add the category to the database",
+                null));
         }
 
         var setCreatedAt = result.Category!.SetCreatedAt(addResult.Value.CreatedAt);
@@ -164,10 +177,10 @@ internal class CreateCategoryHandler : Handler<CreateCategoryRequest, Response<C
         
         Response<CreateCategoryResponse> response;
         
-        if (result.HasError<InternalServerError>())
+        if (result.HasError<BadRequestError>())
         {
-            var error = result.Errors.First(x => x is InternalServerError);
-            response = Response<CreateCategoryResponse>.InternalServerError(error.Message);
+            var error = result.Errors.First(x => x is BadRequestError) as BadRequestError;
+            response = Response<CreateCategoryResponse>.BadRequest(error!.Message, error.ValidationErrors.ToArray());
         }
         else if (result.HasError<ValidationError>())
         {

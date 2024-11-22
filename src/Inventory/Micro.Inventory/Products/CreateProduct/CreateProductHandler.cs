@@ -185,10 +185,10 @@ public class CreateProductHandler : Handler<CreateProductRequest, Response<Creat
         
         Response<CreateProductResponse> response;
         
-        if (result.HasError<InternalServerError>())
+        if (result.HasError<BadRequestError>())
         {
-            var error = result.Errors.First(x => x is InternalServerError);
-            response = Response<CreateProductResponse>.InternalServerError(error.Message);
+            var error = result.Errors.First(x => x is BadRequestError) as BadRequestError;
+            response = Response<CreateProductResponse>.BadRequest(error!.Message, error.ValidationErrors.ToArray());
         }
         else if (result.HasError<ValidationError>())
         {

@@ -19,7 +19,7 @@ internal record struct CreateCategoryResult(
     public Result SetCategory()
     {
         if (Category is not null) return Result.Fail("Category was already set");
-        Category = new ProductCategory(Guid.NewGuid(), Request.Name, Request.Description, Request.IsActive);
+        Category = new ProductCategory(Guid.Empty, Request.Name, Request.Description, Request.IsActive);
         return Result.Ok();
     }
 };

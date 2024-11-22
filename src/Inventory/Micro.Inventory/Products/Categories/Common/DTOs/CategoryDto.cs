@@ -2,7 +2,7 @@
 
 namespace Micro.Inventory.Products.Categories.Common.DTOs;
 
-internal record CategoryDto(
+public record CategoryDto(
     Guid Id,
     string Name,
     string Description,
@@ -12,17 +12,4 @@ internal record CategoryDto(
     bool IsActive)
 {
     public bool IsDeleted => DeletedAt is not null;
-
-    public ProductCategory ToProductCategory()
-    {
-        return new ProductCategory(
-            Id, 
-            Name, 
-            Description,
-            IsActive,
-            IsDeleted,
-            CreatedAt,
-            UpdatedAt,
-            DeletedAt);
-    }
 }
